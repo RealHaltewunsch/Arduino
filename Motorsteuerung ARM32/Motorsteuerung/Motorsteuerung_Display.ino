@@ -24,6 +24,7 @@ void Display_Fehler_entfernen() {
     Geschwindigkeit_Vorzeichen = false;
   }
   if (Freigabe_alt != Freigabe || Geschwindigkeit_gross_alt != Geschwindigkeit_gross || Geschwindigkeit_Vorzeichen_alt != Geschwindigkeit_Vorzeichen || OLED_Reset != OLED_Reset_alt) { //sonst werden komisches Sachen angezeigt...
+    ssd1306_128x64_i2c_init();
     ssd1306_clearScreen();    //hier rum gehts, das wird so komisch implementiert da sonst immer der gesamte Bildschirm flackert und das nervt!
     if (Freigabe) { //damit werden die Konstanten nicht immer neu geschrieben
       ssd1306_printFixed(0,  0, "Temperaturen:", STYLE_NORMAL);   //(XX//YY)
