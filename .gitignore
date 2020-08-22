@@ -13,5 +13,5 @@ config.ini
 .gitignore
 .gitattributes
 l_schen/
-
-
+.syncfolderspro
+.DS_Store
