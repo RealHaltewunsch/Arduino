@@ -10,7 +10,7 @@ To-Do
 - [ ] Spannung der Batterie messen und ausgeben, wenn Sollwert 0
 - [ ] 575918µS benötigt der µC ohne angeschlossene Sensoren, 15µS min
 - [ ] 116177µS max ohne Temperatursensorcheck, 14µS min
-- [ ] Stromfehleranzeige
+- [ ] Batterie % ausgeben, berechnen
 - [ ] Reset Taster hinzufügen 
 - [x] Nur Bits neu Anzeigen lassen, Text wird neu geschrieben in der Fehler beseitigen Funktion
 - [x] -127C Anzeige 
