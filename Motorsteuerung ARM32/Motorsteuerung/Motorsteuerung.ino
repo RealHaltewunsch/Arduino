@@ -184,8 +184,8 @@ ADS1115_WE adc(I2C_ADDRESS);
 
 
 //test
-unsigned int max_durchlauf = 33;
-unsigned long int micro = 1000;
+//unsigned int max_durchlauf = 33;
+//unsigned long int micro = 1000;
 
 
 void setup() {
