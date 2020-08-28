@@ -41,6 +41,7 @@ if (Notbetrieb) {
   MAX_VALUE_CURRENT = MAX_VALUE_CURRENT_NOTBETRIEB;
   StromPID.SetOutputLimits(MIN_VALUE, MAX_VALUE);
 }
-Sport_Modus_auslesen(); //Aktualsiert den Sportmodus Schalter
+Sport_Modus_auslesen(); //Aktualsiert den Sportmodus Lampe und Modus
+Stromreglung_auslesen();  //Aktualisiert die Notbetrieb Lampe und Modus  
 return;
 }
