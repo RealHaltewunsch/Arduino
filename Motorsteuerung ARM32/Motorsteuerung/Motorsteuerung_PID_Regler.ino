@@ -3,12 +3,11 @@ void Stromreglung_auslesen() {
     Stromregelung = true;
     StromPID.SetMode(AUTOMATIC);
   }
-    else {
-      Stromregelung = false;
-      StromPID.SetMode(MANUAL);
-    }
-    digitalWrite(Stromregelung_PIN_Leuchte, Stromregelung);
+  else {
+    Stromregelung = false;
+    StromPID.SetMode(MANUAL);
   }
+  digitalWrite(Stromregelung_PIN_Leuchte, Stromregelung);
 }
 
 void PID_Regler() { //aufruf nur wenn Stromregelung = true
