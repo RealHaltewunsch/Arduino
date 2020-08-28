@@ -22,19 +22,25 @@ void Sport_Modus_auslesen() {
     Sport_Modus = false;  //Sportmodus wird false, weil Notbetrieb aktiviert ist, anderen beiden Bedingungen treffen nicht zu, Frequenz wird von der ISR Notbetrieb_auslesen verändert
   }
   digitalWrite(Sport_Modus_PIN_Leuchte, Sport_Modus);
-return;
+  return;
 }
 
 void Notbetrieb_auslesen () {
-  Notbetrieb = !digitalRead(Notbetrieb_PIN); //Wenn PIN HIGH dann kein Notbetrieb
-  digitalWrite(Notbetrieb_PIN_Leuchte, Notbetrieb);
-  if (Notbetrieb) {
-    analogWriteFrequency(Frequenz_Notbetrieb);  //2Khz im Notbetrieb
-    MAX_VALUE = MAX_VALUE_NOTBETRIEB;
-    MIN_VALUE = MIN_VALUE_NOTBETRIEB;
-    MAX_VALUE_CURRENT = MAX_VALUE_CURRENT_NOTBETRIEB;
-    StromPID.SetOutputLimits(MIN_VALUE, MAX_VALUE);
-  }
-  Sport_Modus_auslesen(); //Aktualsiert den Sportmodus Schalter
-  return;
+  if (!digitalRead(Notbetrieb_PIN) && Zuendung)
+    Notbetrieb = true; //Wenn PIN HIGH dann kein Notbetrieb
+}
+else {
+  Notbetrieb = false;
+}
+digitalWrite(Notbetrieb_PIN_Leuchte, Notbetrieb);
+
+if (Notbetrieb) {
+  analogWriteFrequency(Frequenz_Notbetrieb);  //2Khz im Notbetrieb
+  MAX_VALUE = MAX_VALUE_NOTBETRIEB;
+  MIN_VALUE = MIN_VALUE_NOTBETRIEB;
+  MAX_VALUE_CURRENT = MAX_VALUE_CURRENT_NOTBETRIEB;
+  StromPID.SetOutputLimits(MIN_VALUE, MAX_VALUE);
+}
+Sport_Modus_auslesen(); //Aktualsiert den Sportmodus Schalter
+return;
 }
