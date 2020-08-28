@@ -1,5 +1,9 @@
 void Stromreglung_auslesen () {
-  Stromregelung = !digitalRead(Stromregelung_PIN);
+if (!digitalRead(Stromregelung_PIN) && !Notbetrieb) {
+  Stromregelung = true;
+  else {
+    Stromregelung = false;
+  }
   digitalWrite(Stromregelung_PIN_Leuchte, Stromregelung);
   if (Stromregelung) {
     StromPID.SetMode(AUTOMATIC);
