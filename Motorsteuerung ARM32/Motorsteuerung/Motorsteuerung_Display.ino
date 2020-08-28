@@ -23,7 +23,7 @@ void Display_Fehler_entfernen() {
   else {
     Geschwindigkeit_Vorzeichen = false;
   }
-  if (Freigabe_alt != Freigabe || Geschwindigkeit_gross_alt != Geschwindigkeit_gross || Geschwindigkeit_Vorzeichen_alt != Geschwindigkeit_Vorzeichen || OLED_Reset != OLED_Reset_alt) { //sonst werden komisches Sachen angezeigt...
+  if ((Freigabe_alt != Freigabe && !Freigabe_lite) || Geschwindigkeit_gross_alt != Geschwindigkeit_gross || Geschwindigkeit_Vorzeichen_alt != Geschwindigkeit_Vorzeichen || OLED_Reset != OLED_Reset_alt) { //sonst werden komisches Sachen angezeigt...
     ssd1306_128x64_i2c_init();  //so werden auch Fehler bei abreißender Verbindung behoben
     ssd1306_clearScreen();    //hier rum gehts, das wird so komisch implementiert da sonst immer der gesamte Bildschirm flackert und das nervt!
     if (Freigabe) { //damit werden die Konstanten nicht immer neu geschrieben
@@ -59,7 +59,7 @@ void OLED_Display_Fehler() {
   //char Batteriespannung_char[5];
   //char Strom_char[4];
   //char Leistung_char[4];
-  
+
   sprintf(tempChar, "%d", Temperatur_Motor);
   strcat (strOutputLine, tempChar);
   strcat (strOutputLine, whitespace);
@@ -70,7 +70,7 @@ void OLED_Display_Fehler() {
 
   sprintf(tempChar, "%d", Temperatur_Akkus_Max);
   strcat (strOutputLine, tempChar);
-  
+
   //dtostrf(Batteriespannung, 1, 1, Batteriespannung_char );    //für float
   //dtostrf(Strom, 1, 1, Strom_char );    //für float
 
