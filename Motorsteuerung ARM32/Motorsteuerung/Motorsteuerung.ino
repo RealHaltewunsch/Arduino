@@ -255,7 +255,7 @@ void loop() {
   Zyklische_Aufrufe();
 
 
-  if (Freigabe || Zuendung && Notbetrieb) {
+  if (Freigabe || Notbetrieb) {
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
   if (Stromregelung && Freigabe)  {
@@ -283,7 +283,7 @@ void MotorSteuerung() {
       analogWrite(MOSFET_PIN, Sollwert_PID);
     }
   }
-  else if (Zuendung && Notbetrieb) {
+  else if (Notbetrieb) {
     analogWrite(MOSFET_PIN, Sollwert);  //Sollwert wird durch das Umschalten in den Notbetrieb schon limitiert auf die angegebenen Grenzen
   }
   else {
