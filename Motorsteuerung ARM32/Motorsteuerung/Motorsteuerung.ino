@@ -88,6 +88,7 @@ bool Temperatursensor_Fehler = true;
 bool AnalogSensorFehler = false;
 bool Freigabe = false;
 bool Freigabe_alt = true;
+bool Freigabe_lite = false;
 bool Temperatur_LED_Zustand = false;
 bool Temperatursensor_Fehler_LED_Zustand = false;
 bool TestLED = false;
