@@ -2,6 +2,7 @@ void Stromreglung_auslesen() {
   if (!digitalRead(Stromregelung_PIN) && !Notbetrieb) {
     Stromregelung = true;
     StromPID.SetMode(AUTOMATIC);
+  }
     else {
       Stromregelung = false;
       StromPID.SetMode(MANUAL);
