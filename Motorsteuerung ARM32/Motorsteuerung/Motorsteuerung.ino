@@ -67,12 +67,12 @@ int GASPEDAL_MAX = 5000;  //Maximalwert der vom gaspedal erreicht werden kann
 int GASPEDAL_MIN = 300; //Offset Spannung Gaspedal in mV
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
-uint8_t Temperatursensor_Akkus_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akkus_2[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akkus_3[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akkus_4[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akkus_5[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akkus_6[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t Temperatursensor_Akku_2[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t Temperatursensor_Akku_3[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t Temperatursensor_Akku_4[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t Temperatursensor_Akku_5[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t Temperatursensor_Akku_6[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t Temperatursensor_Motor[8] = { 0x28, 0x77, 0x10, 0x79, 0xA2, 0x00, 0x03, 0x1F };  //Kabel sind falsch Angschlossen, plus an schwarz und minus an rot
 uint8_t Temperatursensor_Leistungselektronik_1 [8] = { 0x28, 0xD3, 0x13, 0x79, 0xA2, 0x00, 0x03, 0xD1 };
 uint8_t Temperatursensor_Leistungselektronik_2 [8] = { 0x28, 0xCE, 0x06, 0x45, 0x92, 0x16, 0x02, 0xF2 };
@@ -114,16 +114,21 @@ double Kp = 20.0, Ki = 50.0, Kd = 10.0;
 PID StromPID(&Messwert_Strom, &Sollwert_PID, &Messwert_Gaspedal, Kp, Ki, Kd, DIRECT);
 //##############################################################################
 //###
-int Temperatur_Akkus_1 = 0;
-int Temperatur_Akkus_2 = 0;
-int Temperatur_Akkus_3 = 0;
-int Temperatur_Akkus_Max = 0;
-int Temperatur_Akkus_Min = 0;
+int Temperatur_Akku_1 = 0;
+int Temperatur_Akku_2 = 0;
+int Temperatur_Akku_3 = 0;
+int Temperatur_Akku_4 = 0;
+int Temperatur_Akku_5 = 0;
+int Temperatur_Akku_6 = 0;
+int Temperatur_Akku_Max = 0;
+int Temperatur_Akku_Min = 0;
 int Temperatur_Leistungselektronik_1 = 0;
 int Temperatur_Leistungselektronik_2 = 0;
+int Temperatur_Leistungselektronik_3 = 0;
 int Temperatur_Leistungselektronik_Max = 0;
 int Temperatur_Leistungselektronik_Min = 0;
 int Temperatur_Motor = 0;
+int Temperaturzaehler = 0;
 
 int MAX_VALUE = 0;
 int MIN_VALUE = 0;
@@ -145,7 +150,7 @@ int Frequenz_Notbetrieb = 2000;
 
 unsigned long int currentMillis = 0;
 unsigned long int Periode = 0; //Periodendauer in uS, für die PWM interessant
-const unsigned long int interval_Temperatur_LED = 300; //einmal in der Sekunde blinken
+const unsigned long int interval_Temperatur_LED = 300; //dreimal in der Sekunde blinken
 unsigned long int previousMillis_Temperatur_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned long int interval_Temperatursensor_Fehler_LED = 1000; //einmal in der Sekunde blinken
 unsigned long int previousMillis_Temperatursensor_Fehler_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
@@ -153,7 +158,7 @@ unsigned int Abtastintervall = 0;  //Wichtig für die Drehzahl berechnung, kann 
 unsigned long int previousMillis_Abtastintervall = 0; //speichert den Zeitpunkt des letzten durchgehens
 const int interval_Analog_Fehler = 1000;
 unsigned long int previousMillis_Analog_Fehler = 0;
-const int interval_Temperatur = 5000;  //Wichtig für die Temp Messung
+const int interval_Temperatur = 1000;  //Wichtig für die Temp Messung
 unsigned long int previousMillis_Temperatur = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_OLED = 500;  //Wichtig für den OLED 1000 ist auch gut
 unsigned long int previousMillis_OLED = 0; //speichert den Zeitpunkt des letzten durchgehens
@@ -163,7 +168,6 @@ const unsigned int interval_LED = 250;  //Wichtig für die Batteriespannung
 unsigned long int previousMillis_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_OLED_reset = 60000;  //Wichtig für's entfernen von unvorhersehbaren Fehlern
 unsigned long int previousMillis_OLED_reset = 0; //speichert den Zeitpunkt des letzten durchgehens
-
 
 const unsigned int Interval_auslesen = 250;
 unsigned long int Interval_auslesen_verstrichen = 0;
@@ -243,10 +247,11 @@ void setup() {
   Lampentest();
   Bremse_Funktion();
   Zuendung_auslesen();
-  Ueber_Untertemperatur_auslesen();
   Sport_Modus_auslesen();
   AnalogSensor_Fehler();
   Gaspedal_check();
+  Temperatur_start();
+  
 
 
   //Serial.begin(115200);
