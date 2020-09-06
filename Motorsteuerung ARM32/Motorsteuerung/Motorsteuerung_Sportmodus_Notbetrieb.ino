@@ -28,20 +28,21 @@ void Sport_Modus_auslesen() {
 void Notbetrieb_auslesen () {
   if (!digitalRead(Notbetrieb_PIN) && Zuendung) {
     Notbetrieb = true; //Wenn PIN HIGH dann kein Notbetrieb
-}
-else {
-  Notbetrieb = false;
-}
-digitalWrite(Notbetrieb_PIN_Leuchte, Notbetrieb);
+    
+  }
+  else {
+    Notbetrieb = false;
+  }
+  digitalWrite(Notbetrieb_PIN_Leuchte, Notbetrieb);
 
-if (Notbetrieb) {
-  analogWriteFrequency(Frequenz_Notbetrieb);  //2Khz im Notbetrieb
-  MAX_VALUE = MAX_VALUE_NOTBETRIEB;
-  MIN_VALUE = MIN_VALUE_NOTBETRIEB;
-  MAX_VALUE_CURRENT = MAX_VALUE_CURRENT_NOTBETRIEB;
-  StromPID.SetOutputLimits(MIN_VALUE, MAX_VALUE);
-}
-Sport_Modus_auslesen(); //Aktualsiert den Sportmodus Lampe und Modus
-Stromreglung_auslesen();  //Aktualisiert die Notbetrieb Lampe und Modus  
-return;
+  if (Notbetrieb) {
+    analogWriteFrequency(Frequenz_Notbetrieb);  //2Khz im Notbetrieb
+    MAX_VALUE = MAX_VALUE_NOTBETRIEB;
+    MIN_VALUE = MIN_VALUE_NOTBETRIEB;
+    MAX_VALUE_CURRENT = MAX_VALUE_CURRENT_NOTBETRIEB;
+    StromPID.SetOutputLimits(MIN_VALUE, MAX_VALUE);
+  }
+  Sport_Modus_auslesen(); //Aktualsiert den Sportmodus Lampe und Modus
+  Stromreglung_auslesen();  //Aktualisiert die Notbetrieb Lampe und Modus
+  return;
 }
