@@ -5,8 +5,9 @@ void  Zyklische_Aufrufe() {
   }
   if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
     previousMillis_Temperatur = currentMillis;
-    Ueber_Untertemperatur_auslesen();
+    Temperaturen();
   }
+
   if (currentMillis - previousMillis_Analog_Fehler >= interval_Analog_Fehler) {
     previousMillis_Analog_Fehler = currentMillis;
     AnalogSensor_Fehler();
@@ -25,7 +26,7 @@ void  Zyklische_Aufrufe() {
     TestLED = !TestLED;
     digitalWrite(TestLED_PIN, TestLED);
   }
-if (currentMillis - previousMillis_OLED_reset >= interval_OLED_reset) {
+  if (currentMillis - previousMillis_OLED_reset >= interval_OLED_reset) {
     previousMillis_OLED_reset = currentMillis;
     OLED_Reset = !OLED_Reset; //Variable wird geflippt, wenn das der Fall ist wird das von der OLED Fehler entfernen Funktion bearbeitet
   }
