@@ -68,7 +68,7 @@ void OLED_Display_Fehler() {
   strcat (strOutputLine, tempChar);
   strcat (strOutputLine, whitespace);
 
-  sprintf(tempChar, "%d", Temperatur_Akkus_Max);
+  sprintf(tempChar, "%d", Temperatur_Akku_Max);
   strcat (strOutputLine, tempChar);
 
   //dtostrf(Batteriespannung, 1, 1, Batteriespannung_char );    //für float
@@ -122,7 +122,7 @@ void OLED_Display_Freigabe() {
   sprintf(tempChar, "%d", Temperatur_Leistungselektronik_Max);
   strcat (strOutputLine, tempChar);
   strcat (strOutputLine, whitespace);
-  sprintf(tempChar, "%d", Temperatur_Akkus_Max);
+  sprintf(tempChar, "%d", Temperatur_Akku_Max);
   strcat (strOutputLine, tempChar);
 
   dtostrf(Batteriespannung, 2, 1, Batteriespannung_char );    //für float
