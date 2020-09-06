@@ -20,7 +20,7 @@
 //Interrupt Pins sind Multiplexed, es gibt nur 0 bis 15
 //Vergeben: 0;1;2;4;5;6;7;13
 #define Zuendung_PIN_Leuchte PB10
-#define ONE_WIRE_BUS PB2      // Data wire is plugged into pin PB2 on the Arduino
+#define ONE_WIRE_BUS PB2      // Data wire is plugged into pin PB2 on the STM32
 #define Notbetrieb_PIN PB1        //Schalter Notbetrieb
 #define Bremse_PIN PB0
 #define Zuendung_PIN PA7
