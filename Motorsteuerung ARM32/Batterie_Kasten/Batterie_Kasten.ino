@@ -9,6 +9,17 @@
 #define MAX_AKKU 60
 #define MIN_AKKU 40
 
+int PWM = 0;
+
+int Temperatur_Akku_1 = 0;
+int Temperatur_Akku_2 = 0;
+int Temperatur_Akku_3 = 0;
+int Temperatur_Akku_4 = 0;
+int Temperatur_Akku_5 = 0;
+int Temperatur_Akku_6 = 0;
+int Temperatur_Akku_Max = 0;
+int Temperatur_Akku_Min = 0;
+
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t Temperatursensor_Akku_2[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t Temperatursensor_Akku_3[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -34,7 +45,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  if (Master) {
+    PWM = map (Temperatur_Akku_Max, MIN_AKKU, MAX_AKKU, 0, 255);
+    analogWrite(Lüfter_PWM, PWM);
+  }
 }
 
 void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursensor angesprochen, das verringert die Durchlaufzeit.
@@ -80,5 +94,5 @@ void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursen
 }
 
 void ISR () {
-Master = digitalRead(Master_In);
+  Master = digitalRead(Master_In);
 }
