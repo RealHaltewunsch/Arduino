@@ -251,8 +251,6 @@ void setup() {
   AnalogSensor_Fehler();
   Gaspedal_check();
   Temperatur_start();
-  
-
 
   //Serial.begin(115200);
 }
