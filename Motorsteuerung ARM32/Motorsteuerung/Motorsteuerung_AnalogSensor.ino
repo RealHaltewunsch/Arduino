@@ -12,8 +12,7 @@ void AnalogSensor_Fehler () {
 
 
 void  Gaspedal () {
-  //adc.setCompareChannels(ADS1115_COMP_2_GND);
-  //Sollwert_analog = adc.getResult_mV(); // alternative: getResult_mV for Millivolt
+  Sollwert_analog = readChannel(ADS1115_COMP_2_GND); // 
   if (Sollwert_analog > GASPEDAL_MIN) {
     Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
     Sollwert_absolut = map (Sollwert, GASPEDAL_MIN, GASPEDAL_MAX, MIN_VALUE, MAX_VALUE);  //analogWrite Wert absolut gesehen
@@ -39,9 +38,9 @@ void Batteriespannung_messen () {
   Batteriespannung = mapfloat(Batteriespannung_intern, 0.0, 5000, 0.0, 100.0);  //Wert 100 anpassen!! Maximale Spannung die 5000mV ergibt, abhängig vom Widerstand
 }
 
-float readChannel(ADS1115_MUX channel) {
+int readChannel(ADS1115_MUX channel) {
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);
-  float voltage = 0.0;
+  int voltage = 0;
   adc.setCompareChannels(channel);
   adc.startSingleMeasurement();
   while (adc.isBusy()) {}
