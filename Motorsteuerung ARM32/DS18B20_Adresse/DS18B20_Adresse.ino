@@ -2,7 +2,7 @@
 #include <DallasTemperature.h>
 
 // Data wire is plugged into port 1 on the Arduino
-#define ONE_WIRE_BUS 7
+#define ONE_WIRE_BUS PB2
 
 // Setup a oneWire instance to communicate with any OneWire devices
 OneWire oneWire(ONE_WIRE_BUS);
@@ -18,7 +18,7 @@ int deviceCount = 0;
 void setup(void)
 {
   // start serial port
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // Start up the library
   sensors.begin();
@@ -43,7 +43,28 @@ void setup(void)
 }
 
 void loop(void)
-{}
+{
+  delay(1000);
+  Serial.println("tst");
+  //locate devices on the bus
+  Serial.println("Locating devices...");
+  Serial.print("Found ");
+  deviceCount = sensors.getDeviceCount();
+  Serial.print(deviceCount, DEC);
+  Serial.println(" devices.");
+  Serial.println("");
+  
+  Serial.println("Printing addresses...");
+  for (int i = 0;  i < deviceCount;  i++)
+  {
+    Serial.print("Sensor ");
+    Serial.print(i+1);
+    Serial.print(" : ");
+    sensors.getAddress(Thermometer, i);
+    printAddress(Thermometer);
+  }
+  
+  }
 
 void printAddress(DeviceAddress deviceAddress)
 { 
