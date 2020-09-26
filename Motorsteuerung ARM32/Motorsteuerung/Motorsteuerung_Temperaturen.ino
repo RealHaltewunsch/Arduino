@@ -15,9 +15,10 @@ void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursen
       Temperaturzaehler++;
       break;
     case 3:
-      Temperatur_Leistungselektronik_3 = sensors.getTempC(Temperatursensor_Leistungselektronik_3);
+      /*Temperatur_Leistungselektronik_3 = sensors.getTempC(Temperatursensor_Leistungselektronik_3);
       Temperatur_Leistungselektronik_Min = min (Temperatur_Leistungselektronik_Min, Temperatur_Leistungselektronik_3);  //hier wird Leistungselektronik_Min zurückgesetzt
       Temperatur_Leistungselektronik_Max = max (Temperatur_Leistungselektronik_Max, Temperatur_Leistungselektronik_3);  //hier wird Leistungselektronik_Max zurückgesetzt
+      */
       Temperaturzaehler++;
       break;
     case 4:
