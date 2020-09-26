@@ -26,6 +26,7 @@ void loop() {
 
   Sollwert_analog = readChannel(ADS1115_COMP_2_GND);
   OLED_Display();
+  delay(1000);
 }
 
 
