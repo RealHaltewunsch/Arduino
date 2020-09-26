@@ -63,8 +63,8 @@
 #define Temperatursensor_Fehler_Zaehler_Speicher 5
 #define AnalogSensorFehler_Zaehler_Speicher 5
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 5000;  //Maximalwert der vom gaspedal erreicht werden kann
-int GASPEDAL_MIN = 300; //Offset Spannung Gaspedal in mV
+int GASPEDAL_MAX = 4050;  //Maximalwert der vom gaspedal erreicht werden kann
+int GASPEDAL_MIN = 910; //Offset Spannung Gaspedal in mV
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -73,10 +73,11 @@ uint8_t Temperatursensor_Akku_3[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 uint8_t Temperatursensor_Akku_4[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t Temperatursensor_Akku_5[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t Temperatursensor_Akku_6[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Motor[8] = { 0x28, 0x77, 0x10, 0x79, 0xA2, 0x00, 0x03, 0x1F };  //Kabel sind falsch Angschlossen, plus an schwarz und minus an rot
+uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };  
 uint8_t Temperatursensor_Leistungselektronik_1 [8] = { 0x28, 0xD3, 0x13, 0x79, 0xA2, 0x00, 0x03, 0xD1 };
 uint8_t Temperatursensor_Leistungselektronik_2 [8] = { 0x28, 0xCE, 0x06, 0x45, 0x92, 0x16, 0x02, 0xF2 };
-uint8_t Temperatursensor_Leistungselektronik_3 [8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+//uint8_t Temperatursensor_Leistungselektronik_3 [8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+// 0x28, 0x77, 0x10, 0x79, 0xA2, 0x00, 0x03, 0x1F //Kabel sind falsch Angschlossen, plus an schwarz und minus an rot
 //##############################################################################
 //###Auflistung und Zuweisung der Zustände
 volatile bool Stromregelung = false;
@@ -135,7 +136,7 @@ int MIN_VALUE = 0;
 int MAX_VALUE_CURRENT = 0;
 
 volatile uint32_t rev; // Revolution Count
-float Reifen_Durchmesser = 0.2; //in Meter
+float Reifen_Durchmesser = 0.265; //in Meter
 float ReifenxPI = 0.0;
 float MinimaleGeschwindigkeit = 0.5; //in Meter pro Sekunde
 int Geschwindigkeit_in_kmh = 0;
