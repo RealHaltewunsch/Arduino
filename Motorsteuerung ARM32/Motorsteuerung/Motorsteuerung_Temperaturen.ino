@@ -110,11 +110,11 @@ void Temperatur_start () {
   sensors.setResolution(Temperatursensor_Motor, 9);
   sensors.setResolution(Temperatursensor_Leistungselektronik_1, 9);
   sensors.setResolution(Temperatursensor_Leistungselektronik_2, 9);
-  sensors.setResolution(Temperatursensor_Leistungselektronik_3, 9);
+  //sensors.setResolution(Temperatursensor_Leistungselektronik_3, 9);
   Temperatur_Motor = sensors.getTempC(Temperatursensor_Motor);
   Temperatur_Leistungselektronik_1 = sensors.getTempC(Temperatursensor_Leistungselektronik_1);
   Temperatur_Leistungselektronik_2 = sensors.getTempC(Temperatursensor_Leistungselektronik_2);
-  Temperatur_Leistungselektronik_3 = sensors.getTempC(Temperatursensor_Leistungselektronik_3);
+  //Temperatur_Leistungselektronik_3 = sensors.getTempC(Temperatursensor_Leistungselektronik_3);
   Temperatur_Akku_1 = sensors.getTempC(Temperatursensor_Akku_1);
   Temperatur_Akku_2 = sensors.getTempC(Temperatursensor_Akku_2);
   Temperatur_Akku_3 = sensors.getTempC(Temperatursensor_Akku_3);
@@ -133,7 +133,7 @@ void Temperatur_start () {
   Temperatur_Akku_Max = max (Temperatur_Akku_Max, Temperatur_Akku_5);
   Temperatur_Akku_Max = max (Temperatur_Akku_Max, Temperatur_Akku_6);
   Temperatur_Leistungselektronik_Min = min (Temperatur_Leistungselektronik_1, Temperatur_Leistungselektronik_2);
-  Temperatur_Leistungselektronik_Min = min (Temperatur_Leistungselektronik_Min, Temperatur_Leistungselektronik_3);
+  //Temperatur_Leistungselektronik_Min = min (Temperatur_Leistungselektronik_Min, Temperatur_Leistungselektronik_3);
   Temperatur_Leistungselektronik_Max = max (Temperatur_Leistungselektronik_1, Temperatur_Leistungselektronik_2);
   Temperatur_Leistungselektronik_Max = max (Temperatur_Leistungselektronik_Max, Temperatur_Leistungselektronik_3);
   Temperatur_check();
