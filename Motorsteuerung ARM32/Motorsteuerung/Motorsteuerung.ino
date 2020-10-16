@@ -14,7 +14,6 @@
 //Potentiometer 2 -> Gegen Uhrzeigersinn bis zum Anschlag
 //Potentiometer 3 -> Gegen Uhrzeigersinn bis zum Anschlag
 
-
 // ###Bibliotheken
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -93,7 +92,6 @@ bool Temperatur_LED_Zustand = false;
 bool Temperatursensor_Fehler_LED_Zustand = false;
 bool TestLED = false;
 bool Regenerativbremsen = false;
-
 //OLED Fehler beseitgen und dabei wenig Speicher und Rechenzeit benötigende Variablen
 bool Geschwindigkeit_gross_alt = false; //verwirrendes Konzept, aber das wird benötigt, da sonst ein Anzeigefehler ensteht wenn man von einer einstellingen Geschwindigkeit zu einer zweistelligen Geschwindigkeit wechselt
 bool Geschwindigkeit_gross = false; //verwirrendes Konzept, aber das wird benötigt, da sonst ein Anzeigefehler ensteht wenn man von einer einstellingen Geschwindigkeit zu einer zweistelligen Geschwindigkeit wechselt
@@ -113,13 +111,18 @@ int Temperatur_Akku_Min = 0;
 int Temperatur_Motor = 0;
 int Temperaturzaehler = 0;
 
+int Sollwert_analog = 0;
+int Sollwert_relativ = 0;
+int Sollwert_hex = 0x00;
+
 int Strom = 0;
 int Strom_hex = 0x00;
-int Sollwert_hex = 0x00;
-float Leistung = 0;
 
 int Batteriespannung = 0;
 int Batteriespannung_hex = 0x00;
+
+int Leistung = 0;
+
 
 
 unsigned long int currentMillis = 0;

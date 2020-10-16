@@ -1,28 +1,3 @@
-void OLED_Display () {
-  Display_Fehler_entfernen();
-  OLED_Display();
-}
-
-void Display_Fehler_entfernen() {
-    else {  //damit werden die Konstanten nicht immer neu geschrieben
-      ssd1306_setFixedFont(ssd1306xled_font5x7);  //5x7, 6x8
-      ssd1306_printFixed(0,  0, "Temperaturen:", STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(0,  8, "Motor|Elektronik|Akku", STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(0,  24, "Bremse: " , STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(64,  24, "Zuendung: " , STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(0,  32, "Uebertemp: " , STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(64,  32, "Untertemp: " , STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(0,  40, "ASensFehl: " , STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(64,  40, "TSensFehl: " , STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(0,  48, "Gaspedal: " , STYLE_NORMAL);   //(XX//YY)
-      ssd1306_printFixed(60,  48, "Regelung: " , STYLE_NORMAL);   //(XX//YY)
-      //ssd1306_printFixed(40, 56, " V" , STYLE_NORMAL);   //(XX//YY)   //Fehler anfällig
-      //ssd1306_printFixed(100, 56, " A" , STYLE_NORMAL);   //(XX//YY)  //Fehler anfällig
-    }
-  }
-  
-
-
 void OLED_Display() {
   char strOutputLine[25] = "";  //25
   char tempChar[40] = "";   //50
