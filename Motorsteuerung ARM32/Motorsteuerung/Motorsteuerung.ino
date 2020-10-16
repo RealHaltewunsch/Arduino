@@ -5,6 +5,16 @@
 //STM32CubeProgrammer (DFU)
 //STM32 Core V1.90
 
+//DIP Schalter Leistungselektronik
+//1 OFF
+//2 OFF
+//3 OFF   Peak-Current on
+//4 ON    UART Simple Mode
+//Potentiometer 1 -> Im Uhrzeigersinn bis zum Anschlag
+//Potentiometer 2 -> Gegen Uhrzeigersinn bis zum Anschlag
+//Potentiometer 3 -> Gegen Uhrzeigersinn bis zum Anschlag
+
+
 // ###Bibliotheken
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -37,7 +47,6 @@
 #define Freigabe_PIN_Leuchte PC14
 #define Gaspedal_check_PIN PC13
 #define TestLED_PIN PB12
-
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
@@ -109,8 +118,9 @@ int Strom_hex = 0x00;
 int Sollwert_hex = 0x00;
 float Leistung = 0;
 
+int Batteriespannung = 0;
+int Batteriespannung_hex = 0x00;
 
-float Batteriespannung = 0.0;
 
 unsigned long int currentMillis = 0;
 const unsigned long int interval_Temperatur_LED = 300; //dreimal in der Sekunde blinken
@@ -140,6 +150,11 @@ uint8_t Uebertemperatur_Zaehler = 0;    //implementiert
 uint8_t Untertemperatur_Zaehler = 0;    //implementiert
 uint8_t Temperatursensor_Fehler_Zaehler = 0;  //implementiert
 uint8_t AnalogSensorFehler_Zaehler = 0;   //implementiert
+
+int Uebertemperatur_Zaehler_Speicher = 5;
+int Untertemperatur_Zaehler_Speicher = 5;
+int Temperatursensor_Fehler_Zaehler_Speicher = 5;
+int AnalogSensorFehler_Zaehler_Speicher = 5;
 
 // Setup a oneWire instance to communicate with any OneWire devices
 // (not just Maxim/Dallas temperature ICs)
@@ -208,7 +223,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   currentMillis = millis();
-
   Zyklische_Aufrufe();
 
   if (Freigabe || Notbetrieb) {

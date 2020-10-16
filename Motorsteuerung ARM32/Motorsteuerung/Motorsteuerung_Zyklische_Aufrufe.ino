@@ -3,10 +3,12 @@ void  Zyklische_Aufrufe() {
     previousMillis_Abtastintervall = currentMillis;
     Geschwindigkeit_berechnen();
   }
-  if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
+  /*
+    if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
     previousMillis_Temperatur = currentMillis;
     Temperaturen();
-  }
+    }
+  */
 
   if (currentMillis - previousMillis_Analog_Fehler >= interval_Analog_Fehler) {
     previousMillis_Analog_Fehler = currentMillis;
@@ -16,16 +18,24 @@ void  Zyklische_Aufrufe() {
     previousMillis_OLED = currentMillis;
     OLED_Display();
   }
+  /*
   if (currentMillis - previousMillis_Batteriespannung >= interval_Batteriespannung) {
     previousMillis_Batteriespannung = currentMillis;
-    Batteriespannung_messen();
-    Strom_messen();
+
+    Serial1.write(0xCC);    //Supply Voltage lesen
+    if (Serial1.available() > 0) {      //<-----------------------------------------------------------------------------------------------------möglicherweise Problematisch
+      Batteriespannung_hex = Serial.read();
+      Batteriespannung = map(Batteriespannung_hex,0x00,0x7F,0,156);
+    }
   }
+  */
+
   if (currentMillis - previousMillis_LED >= interval_LED) {
     previousMillis_LED = currentMillis;
     TestLED = !TestLED;
     digitalWrite(TestLED_PIN, TestLED);
   }
+  
   if (currentMillis - previousMillis_OLED_reset >= interval_OLED_reset) {
     previousMillis_OLED_reset = currentMillis;
     OLED_Reset = !OLED_Reset; //Variable wird geflippt, wenn das der Fall ist wird das von der OLED Fehler entfernen Funktion bearbeitet
@@ -43,5 +53,4 @@ void  Zyklische_Aufrufe() {
   else {
     digitalWrite(Uebertemperatur_PIN_Leuchte, LOW);
   }
-  return;
 }

@@ -2,7 +2,7 @@ void Ueber_Untertemperatur_auslesen() {
   if (MAX_TEMP_AKKU_RUN <= Max_Akku_Temperatur_erfragen() || MAX_TEMP_MOTOR <= Motor_Temperatur_erfragen() || MAX_TEMP_LEISTUNGSELEKTRONIK <= Max_Leistungselektronik_Temperatur_erfragen()) { //wenn True dann Überhitzt, erweitern um die anderen Sensoren
     Uebertemperatur_Zaehler++;
     if (Uebertemperatur_Zaehler >= Uebertemperatur_Zaehler_Speicher) {
-      analogWrite(MOSFET_PIN, 0);
+      
       Uebertemperatur = true;
     }
   }
