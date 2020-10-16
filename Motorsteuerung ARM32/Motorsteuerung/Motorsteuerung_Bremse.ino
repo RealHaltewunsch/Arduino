@@ -1,5 +1,4 @@
-void Bremse_Funktion () {
+void Bremse_Auslesen () {
   Bremse = digitalRead(Bremse_PIN);
-  Freigabe_Check();
   return;
 }

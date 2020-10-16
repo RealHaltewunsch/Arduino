@@ -12,15 +12,16 @@ void AnalogSensor_Fehler () {
 
 
 void  Gaspedal () {
-  Sollwert_analog = readChannel(ADS1115_COMP_2_GND); // 
+  Sollwert_analog = readChannel(ADS1115_COMP_2_GND); //
   if (Sollwert_analog > GASPEDAL_MIN) {
     Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
-    Sollwert_absolut = map (Sollwert, GASPEDAL_MIN, GASPEDAL_MAX, MIN_VALUE, MAX_VALUE);  //analogWrite Wert absolut gesehen
+    Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
   }
   else {
-    Sollwert_absolut = 0;
-    Sollwert_relativ = 0;
+    Sollwert_hex = 0x00;
   }
+  Serial1.write(0x80);    //Speed Command
+  Serial1.write(Sollwert_hex);    //Wert von oben
 }
 
 void Gaspedal_check () {
@@ -28,15 +29,6 @@ void Gaspedal_check () {
   Freigabe_Check();
 }
 
-void Strom_messen () {
-  float Strom_intern = readChannel(ADS1115_COMP_0_GND);
-  Strom = mapfloat(Strom_intern, 0.0, 5000.0, 0.0, 400.0);   //alles float's
-}
-
-void Batteriespannung_messen () {
-  float Batteriespannung_intern = readChannel(ADS1115_COMP_1_GND);
-  Batteriespannung = mapfloat(Batteriespannung_intern, 0.0, 5000, 0.0, 100.0);  //Wert 100 anpassen!! Maximale Spannung die 5000mV ergibt, abhängig vom Widerstand
-}
 
 int readChannel(ADS1115_MUX channel) {
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);
