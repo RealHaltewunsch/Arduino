@@ -33,6 +33,7 @@
 //TX PA15
 #define Zuendung_PIN_Leuchte PB10
 #define Notbetrieb_PIN PB1        //Schalter Notbetrieb
+#define Enable_Pin PB2
 #define Bremse_PIN PB0
 #define Zuendung_PIN PA7
 #define Sportmodus_PIN PA6
@@ -109,6 +110,8 @@ int Temperatur_Akku_6 = 0;
 int Temperatur_Akku_Max = 0;
 int Temperatur_Akku_Min = 0;
 int Temperatur_Motor = 0;
+int Temperatur_Leistungselektronik = 0;
+int Temperatur_Leistungselektronik_hex = 0;
 int Temperaturzaehler = 0;
 
 int Sollwert_analog = 0;
@@ -122,8 +125,6 @@ int Batteriespannung = 0;
 int Batteriespannung_hex = 0x00;
 
 int Leistung = 0;
-
-
 
 unsigned long int currentMillis = 0;
 const unsigned long int interval_Temperatur_LED = 300; //dreimal in der Sekunde blinken

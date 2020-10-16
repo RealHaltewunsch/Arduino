@@ -8,7 +8,7 @@ void OLED_Display() {
   strcat (strOutputLine, tempChar);
   strcat (strOutputLine, whitespace);
 
-  sprintf(tempChar, "%d", Temperatur_Leistungselektronik_Max);
+  sprintf(tempChar, "%d", Temperatur_Leistungselektronik);
   strcat (strOutputLine, tempChar);
   strcat (strOutputLine, whitespace);
 
@@ -43,8 +43,12 @@ void OLED_Display() {
   ssd1306_printFixed(60,  48, "Reg_Brems " , STYLE_NORMAL);   //(XX//YY)
   sprintf(Char, "%d", Regenerativbremsen);  //Funktioniert
   ssd1306_printFixed(110,  48, Char , STYLE_NORMAL);   //(XX//YY)
-  ssd1306_printFixed(0, 56, Batteriespannung_char , STYLE_NORMAL);   //(XX//YY)
+  sprintf(tempChar, "%d", Batteriespannung);
+  strcat (strOutputLine, Char);
+  ssd1306_printFixed(0, 56, Char , STYLE_NORMAL);   //(XX//YY)
   ssd1306_printFixed(20, 56, " V" , STYLE_NORMAL);   //(XX//YY)
-  ssd1306_printFixed(60, 56, Strom_char , STYLE_NORMAL);   //(XX//YY)
+  sprintf(tempChar, "%d", Strom);
+  strcat (strOutputLine, Char);
+  ssd1306_printFixed(60, 56, Char , STYLE_NORMAL);   //(XX//YY)
   ssd1306_printFixed(50, 56, " A" , STYLE_NORMAL);   //(XX//YY)
 }

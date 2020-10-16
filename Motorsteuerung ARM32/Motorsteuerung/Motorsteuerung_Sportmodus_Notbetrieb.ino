@@ -6,7 +6,7 @@ void Sport_Modus_auslesen() {
   }
   else if (digitalRead(Notbetrieb_PIN) && digitalRead(Sportmodus_PIN)) {
     Sport_Modus = false;
-    Strom_hex = map(MAX_VALUE_CURRENT, 0, 438, 0x00, 0x7F);
+    Strom_hex = map(MAX_VALUE_CURRENT_NOTBETRIEB, 0, 438, 0x00, 0x7F);
   }
   else {
     Sport_Modus = false;  //Sportmodus wird false, weil Notbetrieb aktiviert ist, anderen beiden Bedingungen treffen nicht zu, Frequenz wird von der ISR Notbetrieb_auslesen verändert
@@ -20,13 +20,13 @@ void Notbetrieb_auslesen () {
   if (!digitalRead(Notbetrieb_PIN) && Zuendung) {
     Notbetrieb = true; //Wenn PIN HIGH dann kein Notbetrieb
     Strom_hex = map(MAX_VALUE_CURRENT_NOTBETRIEB, 0, 438, 0x00, 0x7F);
+    digitalWrite(Enable_Pin, LOW);
   }
   else {
     Notbetrieb = false;
   }
   digitalWrite(Notbetrieb_PIN_Leuchte, Notbetrieb);
   Sport_Modus_auslesen(); //Aktualsiert den Sportmodus Lampe und Modus
-  Stromreglung_auslesen();  //Aktualisiert die Notbetrieb Lampe und Modus
   return;
 }
 

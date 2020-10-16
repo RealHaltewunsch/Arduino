@@ -13,5 +13,5 @@ void Freigabe_Check() {
   MotorSteuerung();
 
   digitalWrite(Freigabe_PIN_Leuchte, Freigabe);
-  digitalWrite(Enable, !Freigabe);
+  digitalWrite(Enable_Pin, !Freigabe);
 }
