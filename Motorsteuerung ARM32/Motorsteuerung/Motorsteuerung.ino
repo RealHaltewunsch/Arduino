@@ -237,24 +237,17 @@ void loop() {
     digitalWrite(Enable_Pin, LOW);
     Serial1.write(0x8A);    //Direction
     Serial1.write(0x01);    // FORWARD
+    Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
   else if (Freigabe || Zuendung && Notbetrieb && Bremse && Regenerativbremsen) {
     digitalWrite(Enable_Pin, LOW);
     Serial1.write(0x8A);    //Direction
     Serial1.write(0x02);    // REGEN
+    Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
   else {
     digitalWrite(Enable_Pin, HIGH);
     Serial1.write(0x8A);    //Direction
     Serial1.write(0x00);    // STOP
-  }
-
-
-
-
-
-
-  if (Freigabe || Notbetrieb) {
-    Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
 }
