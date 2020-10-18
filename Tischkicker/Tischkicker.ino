@@ -28,43 +28,31 @@ unsigned long currentMillis = millis();
 
 void setup() {
   // put your setup code here, to run once:
-  /*
-    pinMode(LED1, OUTPUT);
-    pinMode(LED2, OUTPUT);
-    pinMode(LED3, OUTPUT);
-    pinMode(LED4, OUTPUT);
-
-    digitalWrite(LED1, HIGH);
-    digitalWrite(LED2, HIGH);
-    digitalWrite(LED3, HIGH);
-    digitalWrite(LED4, HIGH);
-
-    delay(2000);
-
-    digitalWrite(LED1, LOW);
-    digitalWrite(LED2, LOW);
-    digitalWrite(LED3, LOW);
-    digitalWrite(LED4, LOW);
-  */
-
   /*Startschleife*/
-
-
   for (int i = 0; i <= 1; i++) { //2 mal blinkend durchlaufen
-
 
     for (int i = 0; i <= 10; i++) {
       pinMode (i, OUTPUT);
       digitalWrite(i, HIGH);
       delay(50);
-      digitalWrite(i, LOW);
+      if (i == 10) {
+        pinMode(i, INPUT);
+      }
+      else {
+        digitalWrite(i, LOW);
+      }
     }
 
     for (int i = 10; i >= 1; i--) {
       pinMode (i, OUTPUT);
       digitalWrite(i, HIGH);
       delay(50);
-      digitalWrite(i, LOW);
+      if (i == 10) {
+        pinMode(i, INPUT);
+      }
+      else {
+        digitalWrite(i, LOW);
+      }
     }
   }
   for (int i = 0; i <= 10; i++) { //Leuchtend durchlaufen und wieder erlischen
@@ -75,9 +63,14 @@ void setup() {
   for (int i = 10; i >= 0; i--) {
     pinMode (i, OUTPUT);
     delay(150);
+    if (i == 10) {
+      pinMode(i, INPUT);
+    }
+    else {
+      digitalWrite(i, LOW);
+    }
     digitalWrite(i, LOW);
   }
-
   pinMode(11, INPUT_PULLUP); //stabieleres Input
 
 }
@@ -109,7 +102,12 @@ void loop() {
 void Torzahl(int a) {
   switch (a) {
     case 0:  for (int i = 10; i >= 0; i--) {
-        digitalWrite(i, LOW);
+        if (i == 10) {
+          pinMode(i, INPUT);
+        }
+        else {
+          digitalWrite(i, LOW);
+        }
       }
       break;
     case 1: digitalWrite(LED1, HIGH);
@@ -128,7 +126,6 @@ void Torzahl(int a) {
       break;
     case 8: digitalWrite(LED8, HIGH);
       break;
-
     case 9: currentMillis = millis();
       if (currentMillis - previousMillis >= interval) {
         // save the last time you blinked the LED
@@ -148,21 +145,28 @@ void Torzahl(int a) {
 
 
       for (int f = 0; f <= 10; f++) { //Leuchtend durchlaufen und wieder erlischen
+        if (f == 10) {
+          pinMode (LED10, OUTPUT);
+        }
         digitalWrite(f, HIGH);
       }
 
 
 
 
-      delay(interval/2); //Intervallzeit sieg
+      delay(interval / 2); //Intervallzeit sieg
 
       for (int r = 0; r <= 10; r++) { //Leuchtend durchlaufen und wieder erlischen
-        digitalWrite(r, LOW);
+        if (r == 10) {
+          pinMode (LED10, INPUT);
+        }
+        else {
+          digitalWrite(r, LOW);
+        }
       }
-      delay(interval/3); //Intervallzeit sieg
+      delay(interval / 3); //Intervallzeit sieg
       break;
     default:
       break;
   }
-
 }
