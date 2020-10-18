@@ -38,7 +38,7 @@
 #define Zuendung_PIN PA7
 #define Sportmodus_PIN PA6
 #define ONE_WIRE_BUS PA5      // Data wire is plugged into pin PA5 on the STM32
-#define MOSFET_PIN PA3
+#define Enable_Pin PA3
 #define Uebertemperatur_PIN_Leuchte PA2
 #define Sport_Modus_PIN_Leuchte PA1
 #define Regenerativbremsen_PIN PA4
@@ -51,7 +51,6 @@
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
 #define MAX_TEMP_AKKU_RUN 50
-#define MAX_TEMP_LEISTUNGSELEKTRONIK 100
 #define MAX_TEMP_MOTOR 110
 #define MIN_TEMP_AKKU 10
 //##############################################################################
@@ -172,7 +171,12 @@ void setup() {
   Serial1.begin(9600); //Kommunikation mit Leistungselektronik PA15&PB3
   Serial1.write(0xE0);    //UART Mode
   Serial1.write(0x8A);    //Direction
-  Serial1.write(0x00);    // STOP   0x01 Forward; 0x02 Regen
+  Serial1.write(0x01);//forward
+  Serial1.write(0x80);  //speed
+  Serial1.write(0x7F);  //100%
+  delay(2000);
+
+  //Serial1.write(0x00);    // STOP   0x01 Forward; 0x02 Regen
 
   ssd1306_128x64_i2c_init();
   ssd1306_clearScreen();
@@ -195,8 +199,8 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(Regenerativbremsen_PIN), Regenerativbremsen_Auslesen, CHANGE); //Regenerativbremsen_PIN
   pinMode(Uebertemperatur_PIN_Leuchte, OUTPUT);
   pinMode(Freigabe_PIN_Leuchte, OUTPUT);
-  pinMode(MOSFET_PIN, OUTPUT);
-  digitalWrite(MOSFET_PIN, LOW);
+  pinMode(Enable_Pin, OUTPUT);
+  digitalWrite(Enable_Pin, HIGH);
   pinMode(TestLED_PIN, OUTPUT);
 
 
@@ -229,22 +233,28 @@ void loop() {
   currentMillis = millis();
   Zyklische_Aufrufe();
 
+  if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
+    digitalWrite(Enable_Pin, LOW);
+    Serial1.write(0x8A);    //Direction
+    Serial1.write(0x01);    // FORWARD
+  }
+  else if (Freigabe || Zuendung && Notbetrieb && Bremse && Regenerativbremsen) {
+    digitalWrite(Enable_Pin, LOW);
+    Serial1.write(0x8A);    //Direction
+    Serial1.write(0x02);    // REGEN
+  }
+  else {
+    digitalWrite(Enable_Pin, HIGH);
+    Serial1.write(0x8A);    //Direction
+    Serial1.write(0x00);    // STOP
+  }
+
+
+
+
+
+
   if (Freigabe || Notbetrieb) {
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
-  }
-  MotorSteuerung();
-}
-
-
-void MotorSteuerung() {
-  if (Freigabe) {
-
-
-  }
-  else if (Notbetrieb) {
-
-  }
-  else {    //Keine Freigabe, Zündung aus
-
   }
 }

@@ -1,8 +1,5 @@
 void  Zyklische_Aufrufe() {
-  if (currentMillis - previousMillis_Abtastintervall >= Abtastintervall) {
-    previousMillis_Abtastintervall = currentMillis;
-    Geschwindigkeit_berechnen();
-  }
+ 
   /*
     if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
     previousMillis_Temperatur = currentMillis;
@@ -14,10 +11,12 @@ void  Zyklische_Aufrufe() {
     previousMillis_Analog_Fehler = currentMillis;
     AnalogSensor_Fehler();
   }
+  
   if (currentMillis - previousMillis_OLED >= interval_OLED) {
     previousMillis_OLED = currentMillis;
     OLED_Display();
   }
+  
   /*
   if (currentMillis - previousMillis_Batteriespannung >= interval_Batteriespannung) {
     previousMillis_Batteriespannung = currentMillis;
