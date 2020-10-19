@@ -21,8 +21,8 @@ void  Zyklische_Aufrufe() {
   if (currentMillis - previousMillis_Batteriespannung >= interval_Batteriespannung) {
     previousMillis_Batteriespannung = currentMillis;
 
-    Serial1.write(0xCC);    //Supply Voltage lesen
-    if (Serial1.available() > 0) {      //<-----------------------------------------------------------------------------------------------------möglicherweise Problematisch
+    SoftSerial.write((byte)0xCC);    //Supply Voltage lesen
+    if (SoftSerial.available() > 0) {      //<-----------------------------------------------------------------------------------------------------möglicherweise Problematisch
       Batteriespannung_hex = Serial.read();
       Batteriespannung = map(Batteriespannung_hex,0x00,0x7F,0,156);
     }

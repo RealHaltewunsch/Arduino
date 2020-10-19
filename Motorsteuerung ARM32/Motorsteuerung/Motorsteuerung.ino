@@ -21,6 +21,7 @@
 #include<ADS1115_WE.h>
 #include<Wire.h>
 #include "ssd1306.h"
+#include <SoftwareSerial.h>
 //##############################################################################
 //####I2C Adressen & AnalogSensor
 #define I2C_ADDRESS 0x48    //Adresse für den AnalogSensor
@@ -82,7 +83,8 @@ volatile bool Bremse = true;
 volatile bool Zuendung = false;
 volatile bool Sport_Modus = false;
 volatile bool Notbetrieb = false;
-volatile bool Gaspedal_angeschlossen = false;
+//volatile bool Gaspedal_angeschlossen = false;
+const bool Gaspedal_angeschlossen = true;
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
 bool Temperatursensor_Fehler = true;
@@ -167,16 +169,24 @@ DallasTemperature sensors(&oneWire);
 
 ADS1115_WE adc(I2C_ADDRESS);
 
-void setup() {
-  Serial1.begin(9600); //Kommunikation mit Leistungselektronik PA15&PB3
-  Serial1.write(0xE0);    //UART Mode
-  Serial1.write(0x8A);    //Direction
-  Serial1.write(0x01);//forward
-  Serial1.write(0x80);  //speed
-  Serial1.write(0x7F);  //100%
-  delay(2000);
+SoftwareSerial SoftSerial(PB3, PA15); // RX, TX
 
-  //Serial1.write(0x00);    // STOP   0x01 Forward; 0x02 Regen
+void setup() {
+  /*SoftSerial.begin(9600); //Kommunikation mit Leistungselektronik PA15&PB3
+    SoftSerial.write((byte)0xE0);    //UART Mode
+    SoftSerial.write((byte)0x8A);    //Direction
+    SoftSerial.write((byte)0x01);//forward
+    SoftSerial.write((byte)0x80);  //speed
+    SoftSerial.write((byte)0x7F);  //100%
+    delay(2000);
+    SoftSerial.write((byte)0x8A);    //Direction
+    SoftSerial.write((byte)0x00);    // STOP   0x01 Forward; 0x02 Regen
+  */
+  SoftSerial.begin(9600);   //Kommunikation mit Leistungselektronik PA15&PB3
+  SoftSerial.write((byte)0xE0);   //UART Mode
+  SoftSerial.write((byte)0x8A);   //Direction
+  SoftSerial.write((byte)0x00);   //STOP
+  
 
   ssd1306_128x64_i2c_init();
   ssd1306_clearScreen();
@@ -235,19 +245,18 @@ void loop() {
 
   if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
     digitalWrite(Enable_Pin, LOW);
-    Serial1.write(0x8A);    //Direction
-    Serial1.write(0x01);    // FORWARD
+    SoftSerial.write((byte)0x8A);    //Direction
+    SoftSerial.write((byte)0x01);    // FORWARD
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
   else if (Freigabe || Zuendung && Notbetrieb && Bremse && Regenerativbremsen) {
     digitalWrite(Enable_Pin, LOW);
-    Serial1.write(0x8A);    //Direction
-    Serial1.write(0x02);    // REGEN
-    Gaspedal(); //Verändert Sollwert abhängig vom Pedal
+    SoftSerial.write((byte)0x8A);    //Direction
+    SoftSerial.write((byte)0x02);    // REGEN
   }
   else {
     digitalWrite(Enable_Pin, HIGH);
-    Serial1.write(0x8A);    //Direction
-    Serial1.write(0x00);    // STOP
+    SoftSerial.write((byte)0x8A);    //Direction
+    SoftSerial.write((byte)0x00);    // STOP
   }
 }

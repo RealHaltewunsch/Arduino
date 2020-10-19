@@ -12,7 +12,7 @@ void AnalogSensor_Fehler () {
 
 
 void  Gaspedal () {
-  Sollwert_analog = readChannel(ADS1115_COMP_2_GND); //
+  Sollwert_analog = readChannel(ADS1115_COMP_0_GND); //
   if (Sollwert_analog > GASPEDAL_MIN) {
     Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
     Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
@@ -20,13 +20,13 @@ void  Gaspedal () {
   else {
     Sollwert_hex = 0x00;
   }
-  Serial1.write(0x80);    //Speed Command
-  Serial1.write(Sollwert_hex);    //Wert von oben
+  SoftSerial.write((byte)0x80);    //Speed Command
+  SoftSerial.write(Sollwert_hex);    //Wert von oben
 }
 
 void Gaspedal_check () {
-  Gaspedal_angeschlossen = !digitalRead(Gaspedal_check_PIN); //Gaspedal Pin low wenn angeschlossen
-  Freigabe_Check();
+  //Gaspedal_angeschlossen = !digitalRead(Gaspedal_check_PIN); //Gaspedal Pin low wenn angeschlossen
+  //Freigabe_Check();     <-------------------------------------------------------------------------------
 }
 
 
