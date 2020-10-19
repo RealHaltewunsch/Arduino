@@ -24,7 +24,7 @@ ssd1306_128x64_i2c_init();
 void loop() {
   // put your main code here, to run repeatedly:
 
-  Sollwert_analog = readChannel(ADS1115_COMP_2_GND);
+  Sollwert_analog = readChannel(ADS1115_COMP_0_GND);
   OLED_Display();
   delay(1000);
 }
