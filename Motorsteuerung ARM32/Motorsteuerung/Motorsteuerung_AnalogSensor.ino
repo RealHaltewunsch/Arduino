@@ -15,13 +15,16 @@ void  Gaspedal () {
   Sollwert_analog = readChannel(ADS1115_COMP_0_GND); //
   if (Sollwert_analog > GASPEDAL_MIN) {
     Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
+    Sollwert_pwm = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0, 1023);
     Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
   }
   else {
-    Sollwert_hex = 0x00;
+    //Sollwert_hex = 0x00;
+    pinMode(Enable_Pin, INPUT);
   }
-  SoftSerial.write((byte)0x80);    //Speed Command
-  SoftSerial.write(Sollwert_hex);    //Wert von oben
+  analogWrite(MOSFET,Sollwert_pwm);
+  //SoftSerial.write((byte)0x80);    //Speed Command
+  //SoftSerial.write(Sollwert_hex);    //Wert von oben
 }
 
 void Gaspedal_check () {

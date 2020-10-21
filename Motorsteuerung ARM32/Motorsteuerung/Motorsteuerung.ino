@@ -48,6 +48,7 @@
 #define Freigabe_PIN_Leuchte PC14
 #define Gaspedal_check_PIN PC13
 #define TestLED_PIN PB12
+#define MOSFET PA15
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
@@ -61,8 +62,8 @@
 #define MAX_VALUE_CURRENT_NOTBETRIEB 80   //hier Strom eintragen <------------------------------------------------------------------------------------------------------
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 4050;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
-int GASPEDAL_MIN = 910; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
+int GASPEDAL_MAX = 3827;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
+int GASPEDAL_MIN = 916; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -117,6 +118,7 @@ int Temperaturzaehler = 0;
 
 int Sollwert_analog = 0;
 int Sollwert_relativ = 0;
+int Sollwert_pwm = 0;
 int Sollwert_hex = 0x00;
 
 int Strom = 0;
@@ -169,7 +171,7 @@ DallasTemperature sensors(&oneWire);
 
 ADS1115_WE adc(I2C_ADDRESS);
 
-SoftwareSerial SoftSerial(PB3, PA15); // RX, TX
+//SoftwareSerial SoftSerial(PA15, PB3); // RX, TX
 
 void setup() {
   /*SoftSerial.begin(9600); //Kommunikation mit Leistungselektronik PA15&PB3
@@ -182,11 +184,6 @@ void setup() {
     SoftSerial.write((byte)0x8A);    //Direction
     SoftSerial.write((byte)0x00);    // STOP   0x01 Forward; 0x02 Regen
   */
-  SoftSerial.begin(9600);   //Kommunikation mit Leistungselektronik PA15&PB3
-  SoftSerial.write((byte)0xE0);   //UART Mode
-  SoftSerial.write((byte)0x8A);   //Direction
-  SoftSerial.write((byte)0x00);   //STOP
-  
 
   ssd1306_128x64_i2c_init();
   ssd1306_clearScreen();
@@ -209,10 +206,9 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(Regenerativbremsen_PIN), Regenerativbremsen_Auslesen, CHANGE); //Regenerativbremsen_PIN
   pinMode(Uebertemperatur_PIN_Leuchte, OUTPUT);
   pinMode(Freigabe_PIN_Leuchte, OUTPUT);
-  pinMode(Enable_Pin, OUTPUT);
-  digitalWrite(Enable_Pin, HIGH);
   pinMode(TestLED_PIN, OUTPUT);
 
+  pinMode(MOSFET, OUTPUT);
 
   analogWriteResolution (10); //10-bit PWM, 0-1023
   analogWriteFrequency(1000); // PWM Frequenz von 1kHz als Standard
@@ -236,6 +232,13 @@ void setup() {
   AnalogSensor_Fehler();
   Gaspedal_check();
   Temperatur_start();
+  /*SoftSerial.begin(9600);   //Kommunikation mit Leistungselektronik PA15&PB3
+    SoftSerial.write((byte)0xE1);   //UART Mode
+    SoftSerial.write((byte)0x8A);   //Direction
+    SoftSerial.write((byte)0x00);   //STOP
+    SoftSerial.write((byte)0x82);   //Current Limit
+    SoftSerial.write((byte)0xEF);   //239A
+  */
 }
 
 void loop() {
@@ -244,19 +247,21 @@ void loop() {
   Zyklische_Aufrufe();
 
   if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
+    pinMode(Enable_Pin, OUTPUT);
     digitalWrite(Enable_Pin, LOW);
-    SoftSerial.write((byte)0x8A);    //Direction
-    SoftSerial.write((byte)0x01);    // FORWARD
+    //SoftSerial.write((byte)0x8A);    //Direction
+    //SoftSerial.write((byte)0x01);    // FORWARD
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
   else if (Freigabe || Zuendung && Notbetrieb && Bremse && Regenerativbremsen) {
+    pinMode(Enable_Pin, OUTPUT);
     digitalWrite(Enable_Pin, LOW);
-    SoftSerial.write((byte)0x8A);    //Direction
-    SoftSerial.write((byte)0x02);    // REGEN
+    //SoftSerial.write((byte)0x8A);    //Direction
+    //  SoftSerial.write((byte)0x02);    // REGEN
   }
   else {
-    digitalWrite(Enable_Pin, HIGH);
-    SoftSerial.write((byte)0x8A);    //Direction
-    SoftSerial.write((byte)0x00);    // STOP
+    pinMode(Enable_Pin, INPUT);
+    //SoftSerial.write((byte)0x8A);    //Direction
+    //SoftSerial.write((byte)0x00);    // STOP
   }
 }
