@@ -1,4 +1,4 @@
-void OLED_Display() {
+/*void OLED_Display() {
   char strOutputLine[25] = "";  //25
   char tempChar[40] = "";   //50
   char whitespace[] = "C     ";
@@ -55,4 +55,6 @@ void OLED_Display() {
   ssd1306_printFixed(60, 56, Char , STYLE_NORMAL);   //(XX//YY)
   ssd1306_printFixed(50, 56, " A" , STYLE_NORMAL);   //(XX//YY)
   */
+  /*
 }
+*/

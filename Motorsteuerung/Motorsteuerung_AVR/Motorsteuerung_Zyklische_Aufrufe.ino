@@ -11,18 +11,20 @@ void  Zyklische_Aufrufe() {
     previousMillis_Analog_Fehler = currentMillis;
     AnalogSensor_Fehler();
   }
-  
+
+  /*
   if (currentMillis - previousMillis_OLED >= interval_OLED) {
     previousMillis_OLED = currentMillis;
     OLED_Display();
   }
+  */
   
   /*
   if (currentMillis - previousMillis_Batteriespannung >= interval_Batteriespannung) {
     previousMillis_Batteriespannung = currentMillis;
 
-    SoftSerial.write((byte)0xCC);    //Supply Voltage lesen
-    if (SoftSerial.available() > 0) {      //<-----------------------------------------------------------------------------------------------------möglicherweise Problematisch
+    Serial.write(0xCC);    //Supply Voltage lesen
+    if (Serial.available() > 0) {      //<-----------------------------------------------------------------------------------------------------möglicherweise Problematisch
       Batteriespannung_hex = Serial.read();
       Batteriespannung = map(Batteriespannung_hex,0x00,0x7F,0,156);
     }
@@ -34,11 +36,12 @@ void  Zyklische_Aufrufe() {
     TestLED = !TestLED;
     digitalWrite(TestLED_PIN, TestLED);
   }
-  
+  /*
   if (currentMillis - previousMillis_OLED_reset >= interval_OLED_reset) {
     previousMillis_OLED_reset = currentMillis;
     OLED_Reset = !OLED_Reset; //Variable wird geflippt, wenn das der Fall ist wird das von der OLED Fehler entfernen Funktion bearbeitet
   }
+*/
 
   if (Uebertemperatur) {
     digitalWrite(Uebertemperatur_PIN_Leuchte, HIGH);

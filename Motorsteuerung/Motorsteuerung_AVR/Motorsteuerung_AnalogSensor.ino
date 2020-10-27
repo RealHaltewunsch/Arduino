@@ -23,8 +23,8 @@ void  Gaspedal () {
     pinMode(Enable_Pin, INPUT);
   }
   analogWrite(MOSFET,Sollwert_pwm);
-  //SoftSerial.write((byte)0x80);    //Speed Command
-  //SoftSerial.write(Sollwert_hex);    //Wert von oben
+  //Serial.write(0x80);    //Speed Command
+  //Serial.write(Sollwert_hex);    //Wert von oben
 }
 
 void Gaspedal_check () {
