@@ -39,7 +39,6 @@
 #define Zuendung_PIN PA7
 #define Sportmodus_PIN PA6
 #define ONE_WIRE_BUS PA5      // Data wire is plugged into pin PA5 on the STM32
-#define Enable_Pin PA3
 #define Uebertemperatur_PIN_Leuchte PA2
 #define Sport_Modus_PIN_Leuchte PA1
 #define Regenerativbremsen_PIN PA4
