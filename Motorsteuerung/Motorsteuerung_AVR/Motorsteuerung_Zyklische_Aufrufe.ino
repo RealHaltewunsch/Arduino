@@ -1,23 +1,21 @@
 void  Zyklische_Aufrufe() {
  
-  /*
     if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
     previousMillis_Temperatur = currentMillis;
     Temperaturen();
     }
-  */
+  
 
   if (currentMillis - previousMillis_Analog_Fehler >= interval_Analog_Fehler) {
     previousMillis_Analog_Fehler = currentMillis;
     AnalogSensor_Fehler();
   }
 
-  /*
   if (currentMillis - previousMillis_OLED >= interval_OLED) {
     previousMillis_OLED = currentMillis;
     OLED_Display();
   }
-  */
+  
   
   /*
   if (currentMillis - previousMillis_Batteriespannung >= interval_Batteriespannung) {

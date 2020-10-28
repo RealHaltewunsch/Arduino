@@ -210,13 +210,12 @@ void setup() {
   AnalogSensor_Fehler();
   Gaspedal_check();
   Temperatur_start();
-  Serial.begin(9600);   //Kommunikation mit Leistungselektronik PA15&PB3
+  Serial.begin(9600);   //Kommunikation mit Leistungselektronik
   Serial.write(0xE1);   //UART Mode
   Serial.write(0x8A);   //Direction
   Serial.write(0x00);   //STOP
   Serial.write(0x82);   //Current Limit
   Serial.write(0xEF);   //239A
-
 }
 
 void loop() {
