@@ -1,4 +1,9 @@
-//Board: Arduino Mega
+//Board: STM32F4 series
+//Board part number: BlackPillF411CE
+//UART Support enabled (generic 'Serial')
+//USB Support CDC, generic Serial supersede UART
+//STM32CubeProgrammer (DFU)
+//STM32 Core V1.90
 
 //DIP Schalter Leistungselektronik
 //1 OFF
@@ -15,29 +20,35 @@
 #include <stdlib.h>
 #include<ADS1115_WE.h>
 #include<Wire.h>
+#include "ssd1306.h"
+#include <SoftwareSerial.h>
 //##############################################################################
 //####I2C Adressen & AnalogSensor
-//I2C Pins: 20 (SDA), 21 (SCL) //für den Display und analog Sensor interessant
 #define I2C_ADDRESS 0x48    //Adresse für den AnalogSensor
+//STM32: B7(SDA), B6(SCL) //für den Display und analog Sensor interessant
 //##############################################################################
 //###Pin Zuweisungen
-//Verfügbar: 2, 18, 19
-#define Zuendung_PIN_Leuchte 47
-#define Notbetrieb_PIN 28        //Schalter Notbetrieb
-#define Enable_Pin 26
-#define Bremse_PIN 3 //noch nicht fest
-#define Zuendung_PIN 18 
-#define Sportmodus_PIN 22
-#define ONE_WIRE_BUS 35//noch nicht fest
-#define Uebertemperatur_PIN_Leuchte 46
-#define Sport_Modus_PIN_Leuchte 51
-#define Regenerativbremsen_PIN 31
-#define Regenerativbremsen_PIN_Leuchte 48
-#define Notbetrieb_PIN_Leuchte 50
-#define Freigabe_PIN_Leuchte 49
-#define Gaspedal_check_PIN 19 //noch nicht fest
-#define TestLED_PIN 13
-#define MOSFET 44
+//Interrupt Pins sind Multiplexed, es gibt nur 0 bis 15, PB2 darf bei Boot nicht HIGH sein
+//Vergeben: 0;1;2;4;5;6;7;13
+//RX PB3
+//TX PA15
+#define Zuendung_PIN_Leuchte PB10
+#define Notbetrieb_PIN PB1        //Schalter Notbetrieb
+#define Enable_Pin PB2
+#define Bremse_PIN PB0
+#define Zuendung_PIN PA7
+#define Sportmodus_PIN PA6
+#define ONE_WIRE_BUS PA5      // Data wire is plugged into pin PA5 on the STM32
+#define Enable_Pin PA3
+#define Uebertemperatur_PIN_Leuchte PA2
+#define Sport_Modus_PIN_Leuchte PA1
+#define Regenerativbremsen_PIN PA4
+#define Regenerativbremsen_PIN_Leuchte PA0
+#define Notbetrieb_PIN_Leuchte PC15
+#define Freigabe_PIN_Leuchte PC14
+#define Gaspedal_check_PIN PC13
+#define TestLED_PIN PB12
+#define MOSFET PA15
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
@@ -160,11 +171,24 @@ DallasTemperature sensors(&oneWire);
 
 ADS1115_WE adc(I2C_ADDRESS);
 
-
+//SoftwareSerial SoftSerial(PA15, PB3); // RX, TX
 
 void setup() {
+  /*SoftSerial.begin(9600); //Kommunikation mit Leistungselektronik PA15&PB3
+    SoftSerial.write((byte)0xE0);    //UART Mode
+    SoftSerial.write((byte)0x8A);    //Direction
+    SoftSerial.write((byte)0x01);//forward
+    SoftSerial.write((byte)0x80);  //speed
+    SoftSerial.write((byte)0x7F);  //100%
+    delay(2000);
+    SoftSerial.write((byte)0x8A);    //Direction
+    SoftSerial.write((byte)0x00);    // STOP   0x01 Forward; 0x02 Regen
+  */
 
-  pinMode(Bremse_PIN, INPUT);
+  ssd1306_128x64_i2c_init();
+  ssd1306_clearScreen();
+
+  pinMode(Bremse_PIN, INPUT_PULLDOWN);
   attachInterrupt(digitalPinToInterrupt(Bremse_PIN), Bremse_Auslesen, CHANGE); //Interrupt an den BREMSE_PIN
   pinMode(Zuendung_PIN, INPUT_PULLUP);
   pinMode(Zuendung_PIN_Leuchte, OUTPUT);  //Lampe für Zündung ansprechen
@@ -186,8 +210,9 @@ void setup() {
 
   pinMode(MOSFET, OUTPUT);
 
+  analogWriteResolution (10); //10-bit PWM, 0-1023
+  analogWriteFrequency(1000); // PWM Frequenz von 1kHz als Standard
   Wire.begin();
-  
   adc.init();
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);   //maximal 5000 mV
   adc.setConvRate(ADS1115_860_SPS);
@@ -207,12 +232,13 @@ void setup() {
   AnalogSensor_Fehler();
   Gaspedal_check();
   Temperatur_start();
-  Serial.begin(9600);   //Kommunikation mit Leistungselektronik
-  Serial.write(0xE1);   //UART Mode
-  Serial.write(0x8A);   //Direction
-  Serial.write(0x00);   //STOP
-  Serial.write(0x82);   //Current Limit
-  Serial.write(0xEF);   //239A
+  /*SoftSerial.begin(9600);   //Kommunikation mit Leistungselektronik PA15&PB3
+    SoftSerial.write((byte)0xE1);   //UART Mode
+    SoftSerial.write((byte)0x8A);   //Direction
+    SoftSerial.write((byte)0x00);   //STOP
+    SoftSerial.write((byte)0x82);   //Current Limit
+    SoftSerial.write((byte)0xEF);   //239A
+  */
 }
 
 void loop() {
@@ -223,19 +249,19 @@ void loop() {
   if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
     pinMode(Enable_Pin, OUTPUT);
     digitalWrite(Enable_Pin, LOW);
-    //Serial.write(0x8A);    //Direction
-    //Serial.write(0x01);    // FORWARD
+    //SoftSerial.write((byte)0x8A);    //Direction
+    //SoftSerial.write((byte)0x01);    // FORWARD
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
   else if (Freigabe || Zuendung && Notbetrieb && Bremse && Regenerativbremsen) {
     pinMode(Enable_Pin, OUTPUT);
     digitalWrite(Enable_Pin, LOW);
-    //Serial.write(0x8A);    //Direction
-    //  Serial.write(0x02);    // REGEN
+    //SoftSerial.write((byte)0x8A);    //Direction
+    //  SoftSerial.write((byte)0x02);    // REGEN
   }
   else {
     pinMode(Enable_Pin, INPUT);
-    //Serial.write(0x8A);    //Direction
-    //Serial.write(0x00);    // STOP
+    //SoftSerial.write((byte)0x8A);    //Direction
+    //SoftSerial.write((byte)0x00);    // STOP
   }
 }

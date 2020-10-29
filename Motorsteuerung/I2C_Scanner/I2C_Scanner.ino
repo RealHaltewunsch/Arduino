@@ -34,9 +34,9 @@ void setup()
 {
   Wire.begin();
 
-  Serial1.begin(9600);
+  Serial.begin(9600);
   while (!Serial);             // Leonardo: wait for serial monitor
-  Serial1.println("\nI2C Scanner");
+  Serial.println("\nI2C Scanner");
 }
 
 
@@ -45,7 +45,7 @@ void loop()
   byte error, address;
   int nDevices;
 
-  Serial1.println("Scanning...");
+  Serial.println("Scanning...");
 
   nDevices = 0;
   for(address = 1; address < 127; address++ ) 
@@ -58,26 +58,26 @@ void loop()
 
     if (error == 0)
     {
-      Serial1.print("I2C device found at address 0x");
+      Serial.print("I2C device found at address 0x");
       if (address<16) 
-        Serial1.print("0");
-      Serial1.print(address,HEX);
-      Serial1.println("  !");
+        Serial.print("0");
+      Serial.print(address,HEX);
+      Serial.println("  !");
 
       nDevices++;
     }
     else if (error==4) 
     {
-      Serial1.print("Unknown error at address 0x");
+      Serial.print("Unknown error at address 0x");
       if (address<16) 
-        Serial1.print("0");
-      Serial1.println(address,HEX);
+        Serial.print("0");
+      Serial.println(address,HEX);
     }    
   }
   if (nDevices == 0)
-    Serial1.println("No I2C devices found\n");
+    Serial.println("No I2C devices found\n");
   else
-    Serial1.println("done\n");
+    Serial.println("done\n");
 
   delay(5000);           // wait 5 seconds for next scan
 }
