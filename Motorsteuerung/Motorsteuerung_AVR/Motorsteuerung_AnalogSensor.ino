@@ -1,11 +1,8 @@
 void AnalogSensor_Fehler () {
   if (!adc.init()) {
-    AnalogSensorFehler_Zaehler++;
-    if (AnalogSensorFehler_Zaehler >= AnalogSensorFehler_Zaehler_Speicher)
-      AnalogSensorFehler = true;
+    AnalogSensorFehler = true;
   }
   else {
-    AnalogSensorFehler_Zaehler = 0;
     AnalogSensorFehler = false;
   }
 }
@@ -22,9 +19,9 @@ void  Gaspedal () {
     //Sollwert_hex = 0x00;
     pinMode(Enable_Pin, INPUT);
   }
-  analogWrite(MOSFET,Sollwert_pwm);
-  //Serial.write(0x80);    //Speed Command
-  //Serial.write(Sollwert_hex);    //Wert von oben
+  //analogWrite(MOSFET, Sollwert_pwm);
+  Serial.write(byte(0x80));    //Speed Command
+  Serial.write(byte(Sollwert_hex));    //Wert von oben
 }
 
 void Gaspedal_check () {

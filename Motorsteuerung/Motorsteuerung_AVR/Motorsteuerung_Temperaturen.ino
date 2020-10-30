@@ -49,39 +49,29 @@ void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursen
 
 void Temperatur_check() {
   if (MAX_TEMP_AKKU_RUN <= Temperatur_Akku_Max || MAX_TEMP_MOTOR <= Temperatur_Motor) { //wenn True dann Überhitzt
-    if (Uebertemperatur_Zaehler >= Uebertemperatur_Zaehler_Speicher) {
-      Uebertemperatur = true;
-    }
+    Uebertemperatur = true;
   }
   else if (MAX_TEMP_AKKU_STARTUP - 5 > Temperatur_Akku_Max && MAX_TEMP_MOTOR - 20 > Temperatur_Motor) { //wenn True dann um 10 bzw. 20 Grad runter gekühlt
     Uebertemperatur = false;
-    Uebertemperatur_Zaehler = 0;
-  }
-
-  //ab hier wird die Untertemperatur ausgelesen
-  if (Temperatur_Akku_Min <= MIN_TEMP_AKKU && Temperatur_Akku_Min > -127) {
-    Untertemperatur_Zaehler++;
-    if (Untertemperatur_Zaehler >= Untertemperatur_Zaehler_Speicher) {
-      Untertemperatur = true;
-    }
-  }
-  else if (Temperatur_Akku_Min > MIN_TEMP_AKKU) {
-    Untertemperatur = false;
-    Untertemperatur_Zaehler = 0;
-  }
-  //ab hier Temperatursensorfehler überprüfen
-  if (Temperatur_Akku_Min == -127 || Temperatur_Motor == -127) {
-    Temperatursensor_Fehler_Zaehler++;
-    if (Temperatursensor_Fehler_Zaehler >= Temperatursensor_Fehler_Zaehler_Speicher) {
-      Temperatursensor_Fehler = true;
-    }
-  }
-  else {
-    Temperatursensor_Fehler = false;
-    Temperatursensor_Fehler_Zaehler = 0;
-  }
-  Freigabe_Check(); //am Ende wird die Freigabe überprüft
 }
+//ab hier wird die Untertemperatur ausgelesen
+if (Temperatur_Akku_Min <= Temperatur_Akku_Min) {
+  Untertemperatur = true;
+}
+else  {
+  Untertemperatur = false;
+}
+//ab hier Temperatursensorfehler überprüfen
+if (Temperatur_Akku_Min == -127 || Temperatur_Motor == -127) {  
+    Temperatursensor_Fehler = true;
+  }
+else {
+  Temperatursensor_Fehler = false;
+}
+
+Freigabe_Check(); //am Ende wird die Freigabe überprüft
+}
+
 
 
 void Temperatur_start () {

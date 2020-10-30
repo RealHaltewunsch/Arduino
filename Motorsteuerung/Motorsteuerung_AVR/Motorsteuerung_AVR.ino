@@ -15,18 +15,25 @@
 #include <stdlib.h>
 #include<ADS1115_WE.h>
 #include<Wire.h>
+#include <Adafruit_GFX.h>
+#include <Fonts/myownfont.h>
+#include <Adafruit_SSD1306.h>
+
 //##############################################################################
 //####I2C Adressen & AnalogSensor
 //I2C Pins: 20 (SDA), 21 (SCL) //für den Display und analog Sensor interessant
 #define I2C_ADDRESS 0x48    //Adresse für den AnalogSensor
 //##############################################################################
+#define OLED_ADDR   0x3C
+Adafruit_SSD1306 display(-1);
+
 //###Pin Zuweisungen
-//Verfügbar: 2, 18, 19
+//Verfügbar: 2,3
 #define Zuendung_PIN_Leuchte 47
 #define Notbetrieb_PIN 28        //Schalter Notbetrieb
 #define Enable_Pin 26
 #define Bremse_PIN 3 //noch nicht fest
-#define Zuendung_PIN 18 
+#define Zuendung_PIN 18
 #define Sportmodus_PIN 22
 #define ONE_WIRE_BUS 35//noch nicht fest
 #define Uebertemperatur_PIN_Leuchte 46
@@ -142,15 +149,6 @@ const unsigned int Interval_Temperatur = 2500;
 unsigned long int Interval_Temperatur_verstrichen = 0;
 unsigned long int measureTime = 0;
 
-uint8_t Uebertemperatur_Zaehler = 0;    //implementiert
-uint8_t Untertemperatur_Zaehler = 0;    //implementiert
-uint8_t Temperatursensor_Fehler_Zaehler = 0;  //implementiert
-uint8_t AnalogSensorFehler_Zaehler = 0;   //implementiert
-
-int Uebertemperatur_Zaehler_Speicher = 5;
-int Untertemperatur_Zaehler_Speicher = 5;
-int Temperatursensor_Fehler_Zaehler_Speicher = 5;
-int AnalogSensorFehler_Zaehler_Speicher = 5;
 
 // Setup a oneWire instance to communicate with any OneWire devices
 // (not just Maxim/Dallas temperature ICs)
@@ -164,30 +162,32 @@ ADS1115_WE adc(I2C_ADDRESS);
 
 void setup() {
 
-  pinMode(Bremse_PIN, INPUT);
-  attachInterrupt(digitalPinToInterrupt(Bremse_PIN), Bremse_Auslesen, CHANGE); //Interrupt an den BREMSE_PIN
-  pinMode(Zuendung_PIN, INPUT_PULLUP);
+  Wire.begin();
+  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
+  display.clearDisplay();
+  display.display();
+
   pinMode(Zuendung_PIN_Leuchte, OUTPUT);  //Lampe für Zündung ansprechen
-  attachInterrupt(digitalPinToInterrupt(Zuendung_PIN), Zuendung_auslesen, CHANGE); //Interrupt an Zündung_Pin
-  pinMode(Sportmodus_PIN, INPUT_PULLUP);
   pinMode(Sport_Modus_PIN_Leuchte, OUTPUT);
-  attachInterrupt(digitalPinToInterrupt(Sportmodus_PIN), Sport_Modus_auslesen, CHANGE); //Interrupt an Sportmodus_Pin
-  pinMode(Notbetrieb_PIN, INPUT_PULLUP);
   pinMode(Notbetrieb_PIN_Leuchte, OUTPUT);
-  attachInterrupt(digitalPinToInterrupt(Notbetrieb_PIN), Notbetrieb_auslesen, CHANGE); //Interrupt an Notbetrieb_PIN
-  pinMode(Gaspedal_check_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(Gaspedal_check_PIN), Gaspedal_check, CHANGE);
-  pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
   pinMode(Regenerativbremsen_PIN_Leuchte, OUTPUT);  //Lampe für Regenerativbremsen ansprechen
-  attachInterrupt(digitalPinToInterrupt(Regenerativbremsen_PIN), Regenerativbremsen_Auslesen, CHANGE); //Regenerativbremsen_PIN
   pinMode(Uebertemperatur_PIN_Leuchte, OUTPUT);
   pinMode(Freigabe_PIN_Leuchte, OUTPUT);
   pinMode(TestLED_PIN, OUTPUT);
+  pinMode(Bremse_PIN, INPUT);
+  attachInterrupt(digitalPinToInterrupt(Bremse_PIN), Bremse_Auslesen, CHANGE); //Interrupt an den BREMSE_PIN
+  pinMode(Zuendung_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(Zuendung_PIN), Zuendung_auslesen, CHANGE); //Interrupt an Zündung_Pin
+  pinMode(Sportmodus_PIN, INPUT_PULLUP);
+  pinMode(Notbetrieb_PIN, INPUT_PULLUP);
+  pinMode(Gaspedal_check_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(Gaspedal_check_PIN), Gaspedal_check, CHANGE);
+  pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
 
-  pinMode(MOSFET, OUTPUT);
+  //pinMode(MOSFET, OUTPUT);
 
-  Wire.begin();
-  
+  Lampentest();
+
   adc.init();
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);   //maximal 5000 mV
   adc.setConvRate(ADS1115_860_SPS);
@@ -195,24 +195,21 @@ void setup() {
   adc.setMeasureMode(ADS1115_SINGLE);
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);
 
-  Uebertemperatur_Zaehler = Uebertemperatur_Zaehler_Speicher - 1;           //Hier wird der Zähler so gesetzt, dass beim Start nur ein Fehler auftreten darf
-  Untertemperatur_Zaehler = Untertemperatur_Zaehler_Speicher - 1;           //Hier wird der Zähler so gesetzt, dass beim Start nur ein Fehler auftreten darf
-  Temperatursensor_Fehler_Zaehler = Temperatursensor_Fehler_Zaehler_Speicher - 1;           //Hier wird der Zähler so gesetzt, dass beim Start nur ein Fehler auftreten darf
-  AnalogSensorFehler_Zaehler = AnalogSensorFehler_Zaehler_Speicher - 1;           //Hier wird der Zähler so gesetzt, dass beim Start nur ein Fehler auftreten darf
-
-  Lampentest();
   Bremse_Auslesen();
   Zuendung_auslesen();
   Sport_Modus_auslesen();
   AnalogSensor_Fehler();
   Gaspedal_check();
   Temperatur_start();
+
+  OLED_Display();
+
   Serial.begin(9600);   //Kommunikation mit Leistungselektronik
-  Serial.write(0xE1);   //UART Mode
-  Serial.write(0x8A);   //Direction
-  Serial.write(0x00);   //STOP
-  Serial.write(0x82);   //Current Limit
-  Serial.write(0xEF);   //239A
+  Serial.write(byte(0xE1));   //UART Mode
+  Serial.write(byte(0x8A));   //Direction
+  Serial.write(byte(0x00));   //STOP
+  Serial.write(byte(0x82));   //Current Limit
+  Serial.write(byte(0xEF));   //239A
 }
 
 void loop() {
@@ -223,19 +220,19 @@ void loop() {
   if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
     pinMode(Enable_Pin, OUTPUT);
     digitalWrite(Enable_Pin, LOW);
-    //Serial.write(0x8A);    //Direction
-    //Serial.write(0x01);    // FORWARD
+    Serial.write(byte(0x8A));    //Direction
+    Serial.write(byte(0x01));    // FORWARD
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
   else if (Freigabe || Zuendung && Notbetrieb && Bremse && Regenerativbremsen) {
     pinMode(Enable_Pin, OUTPUT);
     digitalWrite(Enable_Pin, LOW);
-    //Serial.write(0x8A);    //Direction
-    //  Serial.write(0x02);    // REGEN
+    Serial.write(byte(0x8A));    //Direction
+    Serial.write(byte(0x02));    // REGEN
   }
   else {
     pinMode(Enable_Pin, INPUT);
-    //Serial.write(0x8A);    //Direction
-    //Serial.write(0x00);    // STOP
+    Serial.write(byte(0x8A));    //Direction
+    Serial.write(byte(0x00));    // STOP
   }
 }

@@ -30,10 +30,10 @@ void Notbetrieb_auslesen () {
 }
 
 /*
-  Serial.write(0x8A);    //Direction
-  Serial.write(0x01);    // FORWARD
-  Serial.write(0x82);    //Current Limit
-  Serial.write(0x0B);    //11 Dezimal enspricht 37,62A
-  Serial.write(0x83);    //Regen Limit
-  Serial.write(0x05);    //5 in Dezimal enspricht 17,1A
+  Serial.write(byte(0x8A));    //Direction
+  Serial.write(byte(0x01));    // FORWARD
+  Serial.write(byte(0x82));    //Current Limit
+  Serial.write(byte(0x0B));    //11 Dezimal enspricht 37,62A
+  Serial.write(byte(0x83));    //Regen Limit
+  Serial.write(byte(0x05));    //5 in Dezimal enspricht 17,1A
 */
