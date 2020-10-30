@@ -35,7 +35,7 @@
 #define Regenerativbremsen_PIN_Leuchte 48
 #define Notbetrieb_PIN_Leuchte 50
 #define Freigabe_PIN_Leuchte 49
-#define Gaspedal_check_PIN 19 //noch nicht fest
+#define Gaspedal_check_PIN 19
 #define TestLED_PIN 13
 #define MOSFET 44
 //##############################################################################
