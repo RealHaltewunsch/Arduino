@@ -12,12 +12,11 @@ void  Gaspedal () {
   Sollwert_analog = readChannel(ADS1115_COMP_0_GND); //
   if (Sollwert_analog > GASPEDAL_MIN) {
     Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
-    Sollwert_pwm = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0, 1023);
+    //Sollwert_pwm = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0, 1023);
     Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
   }
   else {
-    //Sollwert_hex = 0x00;
-    pinMode(Enable_Pin, INPUT);
+    Sollwert_hex = 0x00;
   }
   //analogWrite(MOSFET, Sollwert_pwm);
   Serial.write(byte(0x80));    //Speed Command
@@ -25,8 +24,8 @@ void  Gaspedal () {
 }
 
 void Gaspedal_check () {
-  //Gaspedal_angeschlossen = !digitalRead(Gaspedal_check_PIN); //Gaspedal Pin low wenn angeschlossen
-  //Freigabe_Check();     <-------------------------------------------------------------------------------
+  Gaspedal_angeschlossen = !digitalRead(Gaspedal_check_PIN); //Gaspedal Pin low wenn angeschlossen
+  Freigabe_Check();
 }
 
 

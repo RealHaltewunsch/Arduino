@@ -1,10 +1,15 @@
 void  Zyklische_Aufrufe() {
- 
-    if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
+
+  if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
     previousMillis_Temperatur = currentMillis;
     Temperaturen();
-    }
-  
+  }
+
+  if (currentMillis - previousMillis_Schalter >= interval_Schalter) {
+    previousMillis_Schalter = currentMillis;
+    Schalter();;
+  }
+
 
   if (currentMillis - previousMillis_Analog_Fehler >= interval_Analog_Fehler) {
     previousMillis_Analog_Fehler = currentMillis;
@@ -16,10 +21,10 @@ void  Zyklische_Aufrufe() {
     OLED_Display();
     display.display();
   }
-  
-  
+
+
   /*
-  if (currentMillis - previousMillis_Batteriespannung >= interval_Batteriespannung) {
+    if (currentMillis - previousMillis_Batteriespannung >= interval_Batteriespannung) {
     previousMillis_Batteriespannung = currentMillis;
 
     Serial.write((byte(0xCC));    //Supply Voltage lesen
@@ -27,7 +32,7 @@ void  Zyklische_Aufrufe() {
       Batteriespannung_hex = Serial.read();
       Batteriespannung = map(Batteriespannung_hex,0x00,0x7F,0,156);
     }
-  }
+    }
   */
 
   if (currentMillis - previousMillis_LED >= interval_LED) {
@@ -35,12 +40,6 @@ void  Zyklische_Aufrufe() {
     TestLED = !TestLED;
     digitalWrite(TestLED_PIN, TestLED);
   }
-  /*
-  if (currentMillis - previousMillis_OLED_reset >= interval_OLED_reset) {
-    previousMillis_OLED_reset = currentMillis;
-    OLED_Reset = !OLED_Reset; //Variable wird geflippt, wenn das der Fall ist wird das von der OLED Fehler entfernen Funktion bearbeitet
-  }
-*/
 
   if (Uebertemperatur) {
     digitalWrite(Uebertemperatur_PIN_Leuchte, HIGH);

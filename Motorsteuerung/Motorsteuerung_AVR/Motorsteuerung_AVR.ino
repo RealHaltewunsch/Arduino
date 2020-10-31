@@ -56,6 +56,8 @@ Adafruit_SSD1306 display(-1);
 #define MAX_VALUE_CURRENT_SPORT 200
 #define MAX_VALUE_CURRENT_LOW 60
 #define MAX_VALUE_CURRENT_NOTBETRIEB 80   //hier Strom eintragen <------------------------------------------------------------------------------------------------------
+#define Regen_on 50  //Ampere
+#define Regen_off  10   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
 int GASPEDAL_MAX = 3827;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
@@ -80,8 +82,7 @@ volatile bool Bremse = true;
 volatile bool Zuendung = false;
 volatile bool Sport_Modus = false;
 volatile bool Notbetrieb = false;
-//volatile bool Gaspedal_angeschlossen = false;
-const bool Gaspedal_angeschlossen = true;
+volatile bool Gaspedal_angeschlossen = false;
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
 bool Temperatursensor_Fehler = true;
@@ -119,6 +120,7 @@ int Sollwert_hex = 0x00;
 
 int Strom = 0;
 int Strom_hex = 0x00;
+int Strom_regen_hex = 0x00;
 
 int Batteriespannung = 0;
 int Batteriespannung_hex = 0x00;
@@ -132,24 +134,25 @@ const unsigned long int interval_Temperatursensor_Fehler_LED = 1000; //einmal in
 unsigned long int previousMillis_Temperatursensor_Fehler_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
 const int interval_Analog_Fehler = 1000;
 unsigned long int previousMillis_Analog_Fehler = 0;
-const int interval_Temperatur = 1000;  //Wichtig für die Temp Messung
+const int interval_Temperatur = 2048;  //Wichtig für die Temp Messung
 unsigned long int previousMillis_Temperatur = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_OLED = 500;  //Wichtig für den OLED 1000 ist auch gut
+const unsigned int interval_OLED = 1024;  //Wichtig für den OLED 1000 ist auch gut
 unsigned long int previousMillis_OLED = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Batteriespannung = 2000;  //Wichtig für die Batteriespannung
 unsigned long int previousMillis_Batteriespannung = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_LED = 250;  //Wichtig für die Batteriespannung
+const unsigned int interval_LED = 256;  //Wichtig für die Batteriespannung
 unsigned long int previousMillis_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_OLED_reset = 60000;  //Wichtig für's entfernen von unvorhersehbaren Fehlern
-unsigned long int previousMillis_OLED_reset = 0; //speichert den Zeitpunkt des letzten durchgehens
+const unsigned int interval_Schalter = 512;  //Wichtig für die Batteriespannung
+unsigned long int previousMillis_Schalter = 0; //speichert den Zeitpunkt des letzten durchgehens
 
-const unsigned int Interval_auslesen = 250;
+const unsigned int Interval_auslesen = 256;
 unsigned long int Interval_auslesen_verstrichen = 0;
 const unsigned int Interval_Temperatur = 2500;
 unsigned long int Interval_Temperatur_verstrichen = 0;
 unsigned long int measureTime = 0;
 
 
+int State = 0; //0 = Stopp, 1 = Notbetrieb&&Zündung, 2 = OK,  3 = OK, Bremse aktiv
 // Setup a oneWire instance to communicate with any OneWire devices
 // (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS);
@@ -161,6 +164,10 @@ ADS1115_WE adc(I2C_ADDRESS);
 
 
 void setup() {
+  Serial.begin(9600);   //Kommunikation mit Leistungselektronik
+  Serial.write(byte(0xE0));   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
+  Serial.write(byte(0x8A));   //Direction
+  Serial.write(byte(0x00));   //STOP
 
   Wire.begin();
   display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
@@ -200,16 +207,14 @@ void setup() {
   Sport_Modus_auslesen();
   AnalogSensor_Fehler();
   Gaspedal_check();
+  Regenerativbremsen_Auslesen ();
   Temperatur_start();
+
+  Initialwerte_schreiben ();
 
   OLED_Display();
 
-  Serial.begin(9600);   //Kommunikation mit Leistungselektronik
-  Serial.write(byte(0xE1));   //UART Mode
-  Serial.write(byte(0x8A));   //Direction
-  Serial.write(byte(0x00));   //STOP
-  Serial.write(byte(0x82));   //Current Limit
-  Serial.write(byte(0xEF));   //239A
+
 }
 
 void loop() {
@@ -217,22 +222,54 @@ void loop() {
   currentMillis = millis();
   Zyklische_Aufrufe();
 
-  if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
-    pinMode(Enable_Pin, OUTPUT);
-    digitalWrite(Enable_Pin, LOW);
-    Serial.write(byte(0x8A));    //Direction
-    Serial.write(byte(0x01));    // FORWARD
-    Gaspedal(); //Verändert Sollwert abhängig vom Pedal
+
+
+  int State_alt = State;
+
+  if (!Zuendung) {
+    State = 0;
   }
-  else if (Freigabe || Zuendung && Notbetrieb && Bremse && Regenerativbremsen) {
-    pinMode(Enable_Pin, OUTPUT);
-    digitalWrite(Enable_Pin, LOW);
-    Serial.write(byte(0x8A));    //Direction
-    Serial.write(byte(0x02));    // REGEN
+  else if (Notbetrieb && Zuendung) {
+    State = 1;
+  }
+  else if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
+    State = 2;
+  }
+  else if (Freigabe || Zuendung && Notbetrieb && Bremse) {
+    State = 3;
   }
   else {
-    pinMode(Enable_Pin, INPUT);
-    Serial.write(byte(0x8A));    //Direction
-    Serial.write(byte(0x00));    // STOP
+    State = 0;
   }
+
+
+  if (State_alt != State) {
+    switch (State) {  //0 = Stopp, 1 = Notbetrieb&&Zündung, 2 = OK,  3 = OK, Bremse aktiv
+      case 0:             //Stopp
+        pinMode(Enable_Pin, INPUT);
+        Serial.write(byte(0x8A));    //Direction
+        Serial.write(byte(0x00));    // STOP
+        break;
+      case 1:         // Notbetrieb&&Zündung
+        pinMode(Enable_Pin, OUTPUT);
+        digitalWrite(Enable_Pin, LOW);
+        Serial.write(byte(0x8A));    //Direction
+        Serial.write(byte(0x01));    // FORWARD
+        break;
+      case 2:       //Alles OK
+        pinMode(Enable_Pin, OUTPUT);
+        digitalWrite(Enable_Pin, LOW);
+        Serial.write(byte(0x8A));    //Direction
+        Serial.write(byte(0x01));    // FORWARD
+        break;
+      case 3:       //Bremse aktiv
+        Serial.write(byte(0x8A));    //Direction
+        Serial.write(byte(0x02));    // REGEN
+        break;
+      default: State = 0;
+        break;
+    }
+
+  }
+  Gaspedal(); //Verändert Sollwert abhängig vom Pedal
 }
