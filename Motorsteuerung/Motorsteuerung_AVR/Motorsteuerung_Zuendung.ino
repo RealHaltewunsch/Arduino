@@ -3,5 +3,4 @@ void Zuendung_auslesen() {
   digitalWrite(Zuendung_PIN_Leuchte, Zuendung);
   Freigabe_Check();
   Notbetrieb_auslesen ();
-  return;
 }

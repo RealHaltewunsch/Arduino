@@ -7,7 +7,7 @@ void  Zyklische_Aufrufe() {
 
   if (currentMillis - previousMillis_Schalter >= interval_Schalter) {
     previousMillis_Schalter = currentMillis;
-    Schalter();;
+    Schalter();
   }
 
 

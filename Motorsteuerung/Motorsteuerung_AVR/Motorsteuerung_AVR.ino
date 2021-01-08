@@ -60,8 +60,8 @@ Adafruit_SSD1306 display(-1);
 #define Regen_off  10   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 3827;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
-int GASPEDAL_MIN = 916; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
+int GASPEDAL_MAX = 4566;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
+int GASPEDAL_MIN = 937; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -164,10 +164,20 @@ ADS1115_WE adc(I2C_ADDRESS);
 
 
 void setup() {
-  Serial.begin(9600);   //Kommunikation mit Leistungselektronik
-  Serial.write(byte(0xE0));   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
-  Serial.write(byte(0x8A));   //Direction
-  Serial.write(byte(0x00));   //STOP
+delay(5000);
+  pinMode(Enable_Pin, OUTPUT);
+  digitalWrite(Enable_Pin, LOW);
+  //Serial.begin(9600);   //Kommunikation mit Leistungselektronik
+  Serial.write(0xE0);   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
+  Serial.write(0x8A);   //Direction
+  // Serial.write(byte(0x00));   //STOP
+  Serial.write(0x01);   //forward
+  Serial.write(0x80);    //Speed Command
+  Serial.write(0x7F);    //Wert von oben
+  analogWrite(MOSFET, 255);
+  delay(5000);
+
+
 
   Wire.begin();
   display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
@@ -191,7 +201,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(Gaspedal_check_PIN), Gaspedal_check, CHANGE);
   pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
 
-  //pinMode(MOSFET, OUTPUT);
+  pinMode(MOSFET, OUTPUT);
 
   Lampentest();
 

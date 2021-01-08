@@ -12,13 +12,13 @@ void  Gaspedal () {
   Sollwert_analog = readChannel(ADS1115_COMP_0_GND); //
   if (Sollwert_analog > GASPEDAL_MIN) {
     Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
-    //Sollwert_pwm = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0, 1023);
+    Sollwert_pwm = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0, 255);
     Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
   }
   else {
     Sollwert_hex = 0x00;
   }
-  //analogWrite(MOSFET, Sollwert_pwm);
+  analogWrite(MOSFET, Sollwert_pwm);
   Serial.write(byte(0x80));    //Speed Command
   Serial.write(byte(Sollwert_hex));    //Wert von oben
 }
