@@ -6,5 +6,4 @@ void Freigabe_Check() {
     Freigabe = false;
   }
   digitalWrite(Freigabe_PIN_Leuchte, Freigabe);
-  
 }

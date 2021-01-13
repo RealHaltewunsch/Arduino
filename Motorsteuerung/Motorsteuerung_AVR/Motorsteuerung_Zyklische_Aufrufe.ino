@@ -1,10 +1,10 @@
 void  Zyklische_Aufrufe() {
-
+/*
   if (currentMillis - previousMillis_Temperatur >= interval_Temperatur) {
     previousMillis_Temperatur = currentMillis;
     Temperaturen();
   }
-
+*/
   if (currentMillis - previousMillis_Schalter >= interval_Schalter) {
     previousMillis_Schalter = currentMillis;
     Schalter();

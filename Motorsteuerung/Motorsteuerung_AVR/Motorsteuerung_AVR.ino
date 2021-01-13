@@ -80,10 +80,9 @@ uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 //volatile bool Stromregelung = false;
 volatile bool Bremse = true;
 volatile bool Zuendung = false;
-volatile bool Sport_Modus = false;
-volatile bool Notbetrieb = false;
-volatile bool Notbetrieb_alt = false;
 volatile bool Gaspedal_angeschlossen = false;
+bool Sport_Modus = false;
+bool Notbetrieb = false;
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
 bool Temperatursensor_Fehler = true;
@@ -214,7 +213,7 @@ void setup() {
   AnalogSensor_Fehler();
   Gaspedal_check();
   Regenerativbremsen_Auslesen ();
-  Temperatur_start();
+  //Temperatur_start();
 
   OLED_Display();
 
@@ -272,6 +271,6 @@ void loop() {
         break;
     }
   }
-  
+
   Gaspedal(); //Verändert Sollwert abhängig vom Pedal
 }

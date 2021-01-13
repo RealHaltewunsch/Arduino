@@ -36,11 +36,7 @@ void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursen
       Temperatur_Akku_6 = sensors.getTempC(Temperatursensor_Akku_6);
       Temperatur_Akku_Min = min (Temperatur_Akku_Min, Temperatur_Akku_6);
       Temperatur_Akku_Max = max (Temperatur_Akku_Max, Temperatur_Akku_6);
-      Temperaturzaehler++;
-      break;
-    case 7:
-      //Serial.write(byte(0xCE));    //Temperatur erfragen
-      Temperaturzaehler = 0;
+      Temperaturzaehler = 0;;
       break;
     default:
       Temperaturzaehler = 0;
