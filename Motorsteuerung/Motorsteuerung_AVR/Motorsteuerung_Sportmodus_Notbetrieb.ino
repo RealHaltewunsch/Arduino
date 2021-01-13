@@ -21,7 +21,7 @@ void Sport_Modus_auslesen() {
 }
 
 void Notbetrieb_auslesen () {
-  if (!digitalRead(Notbetrieb_PIN) && Zuendung) {
+  if (!digitalRead(Notbetrieb_PIN)) {
     Notbetrieb = true; //Wenn PIN HIGH dann kein Notbetrieb
   }
   else {

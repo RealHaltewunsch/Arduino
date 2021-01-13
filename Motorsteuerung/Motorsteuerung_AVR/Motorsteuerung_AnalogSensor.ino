@@ -43,9 +43,3 @@ int readChannel(ADS1115_MUX channel) {
   voltage = adc.getResult_mV(); // alternative: getResult_mV for Millivolt
   return voltage;
 }
-/*
-float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
-}
-*/
