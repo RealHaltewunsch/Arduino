@@ -28,8 +28,9 @@
 Adafruit_SSD1306 display(-1);
 
 //###Pin Zuweisungen
-//Verfügbar: 2,3, 18
+//Verfügbar:
 #define Notbetrieb_PIN 28        //Schalter Notbetrieb
+#define Drehzahlsensor_PIN 2
 #define Bremse_PIN 3 //noch nicht fest
 #define Sportmodus_PIN 22
 #define ONE_WIRE_BUS 35//noch nicht fest
@@ -41,6 +42,7 @@ Adafruit_SSD1306 display(-1);
 #define Freigabe_PIN_Leuchte 49
 #define Gaspedal_check_PIN 19
 #define TestLED_PIN 13
+#define Reserve_Pin 18
 #define MOSFET 44
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
@@ -214,7 +216,7 @@ void loop() {
 
   int State_alt = State;
 
-  if (!Gaspedal_angeschlossen ||!Notbetrieb || !AnalogSensorFehler) {
+  if (!Gaspedal_angeschlossen || !Notbetrieb || !AnalogSensorFehler) {
     State = 0;
   }
   else if (Notbetrieb) {
