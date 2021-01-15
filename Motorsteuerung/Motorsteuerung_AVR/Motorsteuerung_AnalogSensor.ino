@@ -9,18 +9,23 @@ void AnalogSensor_Fehler () {
 
 
 void  Gaspedal () {
-  Sollwert_analog = readChannel(ADS1115_COMP_0_GND); //
-  if (Sollwert_analog > GASPEDAL_MIN) {
-    Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
-    Sollwert_pwm = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0, 255);
-    Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
+  if (Gaspedal_angeschlossen) {
+    Sollwert_analog = readChannel(ADS1115_COMP_0_GND); //
+    if (Sollwert_analog > GASPEDAL_MIN) {
+      Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
+      Sollwert_pwm = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0, 255);
+      Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
+    }
+    else {
+      Sollwert_hex = 0x00;
+    }
+    Serial.write(byte(0x80));    //Speed Command
+    Serial.write(byte(Sollwert_hex));    //Wert von oben
   }
   else {
-    Sollwert_hex = 0x00;
+    Serial.write(byte(0x80));    //Direction
+    Serial.write(byte(0x00));    // STOP
   }
-  analogWrite(MOSFET, Sollwert_pwm);
-  Serial.write(byte(0x80));    //Speed Command
-  Serial.write(byte(Sollwert_hex));    //Wert von oben
 }
 
 void Gaspedal_check () {
@@ -37,4 +42,9 @@ int readChannel(ADS1115_MUX channel) {
   while (adc.isBusy()) {}
   voltage = adc.getResult_mV(); // alternative: getResult_mV for Millivolt
   return voltage;
+}
+
+float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }

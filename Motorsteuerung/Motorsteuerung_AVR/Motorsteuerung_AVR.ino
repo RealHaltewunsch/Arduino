@@ -28,22 +28,23 @@
 Adafruit_SSD1306 display(-1);
 
 //###Pin Zuweisungen
-//Verfügbar:
-#define Notbetrieb_PIN 4        //Schalter Notbetrieb
-#define Drehzahlsensor_PIN 5 
+//Verfügbar: 2,3
+#define Zuendung_PIN_Leuchte 47
+#define Notbetrieb_PIN 28        //Schalter Notbetrieb
+#define Enable_Pin 26
 #define Bremse_PIN 3 //noch nicht fest
-#define Sportmodus_PIN 6
-#define ONE_WIRE_BUS 7//noch nicht fest
-#define Uebertemperatur_PIN_Leuchte 8
-#define Sport_Modus_PIN_Leuchte 9
-#define Regenerativbremsen_PIN 10
-#define Regenerativbremsen_PIN_Leuchte 11
-#define Notbetrieb_PIN_Leuchte 12
-#define Freigabe_PIN_Leuchte 13
-#define Gaspedal_check_PIN 2
-//#define TestLED_PIN 13
-//#define Reserve_Pin 18
-//#define MOSFET 44
+#define Zuendung_PIN 18
+#define Sportmodus_PIN 22
+#define ONE_WIRE_BUS 35//noch nicht fest
+#define Uebertemperatur_PIN_Leuchte 46
+#define Sport_Modus_PIN_Leuchte 51
+#define Regenerativbremsen_PIN 31
+#define Regenerativbremsen_PIN_Leuchte 48
+#define Notbetrieb_PIN_Leuchte 50
+#define Freigabe_PIN_Leuchte 49
+#define Gaspedal_check_PIN 19
+#define TestLED_PIN 13
+#define MOSFET 44
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
@@ -53,8 +54,8 @@ Adafruit_SSD1306 display(-1);
 //##############################################################################
 //###Maximalwer Strom, interessant für Den Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 200
-#define MAX_VALUE_CURRENT_LOW 60
-#define MAX_VALUE_CURRENT_NOTBETRIEB 80   //hier Strom eintragen <------------------------------------------------------------------------------------------------------
+#define MAX_VALUE_CURRENT_LOW 80
+#define MAX_VALUE_CURRENT_NOTBETRIEB 50   //(40/17)hier Strom eintragen <------------------------------------------------------------------------------------------------------
 #define Regen_on 50  //Ampere
 #define Regen_off  10   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
@@ -78,15 +79,11 @@ uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 //###Auflistung und Zuweisung der Zustände
 //volatile bool Stromregelung = false;
 volatile bool Bremse = true;
-<<<<<<< HEAD
-=======
 volatile bool Zuendung = false;
 volatile bool Sport_Modus = false;
 volatile bool Notbetrieb = false;
->>>>>>> parent of 393344e... Funktioniert vorerst
+volatile bool Notbetrieb_alt = false;
 volatile bool Gaspedal_angeschlossen = false;
-volatile bool Notbetrieb = false;
-bool Sport_Modus = false;
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
 bool Temperatursensor_Fehler = true;
@@ -165,10 +162,12 @@ DallasTemperature sensors(&oneWire);
 
 ADS1115_WE adc(I2C_ADDRESS);
 
-void setup() {
-<<<<<<< HEAD
-  Serial.begin(9600, SERIAL_8N1);  //Kommunikation mit Leistungselektronik
 
+
+void setup() {
+  pinMode(Enable_Pin, OUTPUT);
+  digitalWrite(Enable_Pin, LOW);
+  Serial.begin(9600, SERIAL_8N1);  //Kommunikation mit Leistungselektronik
   Serial.write(byte(0xE0));   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
   Serial.write(byte(0x8A));    //Direction
   Serial.write(byte(0x00));    // STOP
@@ -176,53 +175,30 @@ void setup() {
   Serial.write(byte(0x00)); //min
   Serial.write(byte(0x85)); //decel limit
   Serial.write(byte(0x00)); //bisschen
-  Serial.println("Test0");
-=======
-delay(5000);
-  pinMode(Enable_Pin, OUTPUT);
-  digitalWrite(Enable_Pin, LOW);
-  //Serial.begin(9600);   //Kommunikation mit Leistungselektronik
-  Serial.write(0xE0);   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
-  Serial.write(0x8A);   //Direction
-  // Serial.write(byte(0x00));   //STOP
-  Serial.write(0x01);   //forward
-  Serial.write(0x80);    //Speed Command
-  Serial.write(0x7F);    //Wert von oben
-  analogWrite(MOSFET, 255);
-  delay(5000);
 
-
-
->>>>>>> parent of 393344e... Funktioniert vorerst
   Wire.begin();
-  //display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
+  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
   display.clearDisplay();
-  //display.display();
+  display.display();
 
-<<<<<<< HEAD
-=======
+  pinMode(Enable_Pin, OUTPUT);
   pinMode(Zuendung_PIN_Leuchte, OUTPUT);  //Lampe für Zündung ansprechen
->>>>>>> parent of 393344e... Funktioniert vorerst
   pinMode(Sport_Modus_PIN_Leuchte, OUTPUT);
   pinMode(Notbetrieb_PIN_Leuchte, OUTPUT);
   pinMode(Regenerativbremsen_PIN_Leuchte, OUTPUT);  //Lampe für Regenerativbremsen ansprechen
   pinMode(Uebertemperatur_PIN_Leuchte, OUTPUT);
   pinMode(Freigabe_PIN_Leuchte, OUTPUT);
-//  pinMode(TestLED_PIN, OUTPUT);
+  pinMode(TestLED_PIN, OUTPUT);
   pinMode(Bremse_PIN, INPUT);
   attachInterrupt(digitalPinToInterrupt(Bremse_PIN), Bremse_Auslesen, CHANGE); //Interrupt an den BREMSE_PIN
+  pinMode(Zuendung_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(Zuendung_PIN), Zuendung_auslesen, CHANGE); //Interrupt an Zündung_Pin
   pinMode(Sportmodus_PIN, INPUT_PULLUP);
   pinMode(Notbetrieb_PIN, INPUT_PULLUP);
   pinMode(Gaspedal_check_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(Gaspedal_check_PIN), Gaspedal_check, CHANGE);
   pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
-<<<<<<< HEAD
-  Serial.println("Test5");
-=======
 
-  pinMode(MOSFET, OUTPUT);
-
->>>>>>> parent of 393344e... Funktioniert vorerst
   Lampentest();
 
   adc.init();
@@ -231,27 +207,18 @@ delay(5000);
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);
   adc.setMeasureMode(ADS1115_SINGLE);
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);
-  Serial.println("Test6");
-  delay(5000);
-  Serial.println("Test7");
-  Gaspedal_check();
+
   Bremse_Auslesen();
+  Zuendung_auslesen();
   Sport_Modus_auslesen();
   AnalogSensor_Fehler();
-  Regenerativbremsen_Auslesen();
+  Gaspedal_check();
+  Regenerativbremsen_Auslesen ();
   Temperatur_start();
-<<<<<<< HEAD
-  Serial.println("Test8");
-  //OLED_Display();
-  Serial.println("Test9");
-=======
-
-  Initialwerte_schreiben ();
 
   OLED_Display();
 
 
->>>>>>> parent of 393344e... Funktioniert vorerst
 }
 
 void loop() {
@@ -259,22 +226,20 @@ void loop() {
   currentMillis = millis();
   Zyklische_Aufrufe();
 
+
+
   int State_alt = State;
 
-<<<<<<< HEAD
-  if (!Gaspedal_angeschlossen || !Notbetrieb || !AnalogSensorFehler) {
-=======
-  if (!Zuendung) {
->>>>>>> parent of 393344e... Funktioniert vorerst
+  if (!Zuendung || !Gaspedal_angeschlossen) {
     State = 0;
   }
-  else if (Notbetrieb) {
+  else if (Notbetrieb && Zuendung) {
     State = 1;
   }
-  else if (Freigabe || Notbetrieb && !Bremse) {
+  else if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
     State = 2;
   }
-  else if (Freigabe || Notbetrieb && Bremse) {
+  else if (Freigabe || Zuendung && Notbetrieb && Bremse) {
     State = 3;
   }
   else {
@@ -283,31 +248,18 @@ void loop() {
 
 
   if (State_alt != State) {
-    switch (State) {  //0 = Stopp, 1 = Notbetrieb, 2 = OK,  3 = OK, Bremse aktiv
+    switch (State) {  //0 = Stopp, 1 = Notbetrieb&&Zündung, 2 = OK,  3 = OK, Bremse aktiv
       case 0:             //Stopp
-<<<<<<< HEAD
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x00));    // STOP
-        break;
-      case 1:         // Notbetrieb
-=======
-        pinMode(Enable_Pin, INPUT);
-        Serial.write(byte(0x8A));    //Direction
+        Serial.write(byte(0x80));    //Direction
         Serial.write(byte(0x00));    // STOP
         break;
       case 1:         // Notbetrieb&&Zündung
-        pinMode(Enable_Pin, OUTPUT);
-        digitalWrite(Enable_Pin, LOW);
->>>>>>> parent of 393344e... Funktioniert vorerst
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
         break;
       case 2:       //Alles OK
-<<<<<<< HEAD
-=======
-        pinMode(Enable_Pin, OUTPUT);
-        digitalWrite(Enable_Pin, LOW);
->>>>>>> parent of 393344e... Funktioniert vorerst
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
         break;
@@ -318,11 +270,8 @@ void loop() {
       default: State = 0;
         break;
     }
-
   }
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of 393344e... Funktioniert vorerst
+  // if (State == 1 || State == 2) {
   Gaspedal(); //Verändert Sollwert abhängig vom Pedal
+  // }
 }
