@@ -36,7 +36,11 @@ void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursen
       Temperatur_Akku_6 = sensors.getTempC(Temperatursensor_Akku_6);
       Temperatur_Akku_Min = min (Temperatur_Akku_Min, Temperatur_Akku_6);
       Temperatur_Akku_Max = max (Temperatur_Akku_Max, Temperatur_Akku_6);
+<<<<<<< HEAD
       Temperaturzaehler = 0;;
+=======
+      Temperaturzaehler = 0;
+>>>>>>> parent of 393344e... Funktioniert vorerst
       break;
     default:
       Temperaturzaehler = 0;
@@ -53,23 +57,23 @@ void Temperatur_check() {
   }
   else if (MAX_TEMP_AKKU_STARTUP - 5 > Temperatur_Akku_Max && MAX_TEMP_MOTOR - 20 > Temperatur_Motor) { //wenn True dann um 10 bzw. 20 Grad runter gekühlt
     Uebertemperatur = false;
-  }
-  //ab hier wird die Untertemperatur ausgelesen
-  if (Temperatur_Akku_Min <= Temperatur_Akku_Min) {
-    Untertemperatur = true;
-  }
-  else  {
-    Untertemperatur = false;
-  }
-  //ab hier Temperatursensorfehler überprüfen
-  if (Temperatur_Akku_Min == -127 || Temperatur_Motor == -127) {
+}
+//ab hier wird die Untertemperatur ausgelesen
+if (Temperatur_Akku_Min <= Temperatur_Akku_Min) {
+  Untertemperatur = true;
+}
+else  {
+  Untertemperatur = false;
+}
+//ab hier Temperatursensorfehler überprüfen
+if (Temperatur_Akku_Min == -127 || Temperatur_Motor == -127) {  
     Temperatursensor_Fehler = true;
   }
-  else {
-    Temperatursensor_Fehler = false;
-  }
+else {
+  Temperatursensor_Fehler = false;
+}
 
-  Freigabe_Check(); //am Ende wird die Freigabe überprüft
+Freigabe_Check(); //am Ende wird die Freigabe überprüft
 }
 
 
