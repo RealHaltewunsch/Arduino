@@ -31,7 +31,6 @@ Adafruit_SSD1306 display(-1);
 //Verfügbar: 2,3
 #define Zuendung_PIN_Leuchte 47
 #define Notbetrieb_PIN 28        //Schalter Notbetrieb
-#define Enable_Pin 26
 #define Bremse_PIN 3 //noch nicht fest
 #define Zuendung_PIN 18
 #define Sportmodus_PIN 22
@@ -165,8 +164,6 @@ ADS1115_WE adc(I2C_ADDRESS);
 
 
 void setup() {
-  pinMode(Enable_Pin, OUTPUT);
-  digitalWrite(Enable_Pin, LOW);
   Serial.begin(9600, SERIAL_8N1);  //Kommunikation mit Leistungselektronik
   Serial.write(byte(0xE0));   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
   Serial.write(byte(0x8A));    //Direction
@@ -181,7 +178,6 @@ void setup() {
   display.clearDisplay();
   display.display();
 
-  pinMode(Enable_Pin, OUTPUT);
   pinMode(Zuendung_PIN_Leuchte, OUTPUT);  //Lampe für Zündung ansprechen
   pinMode(Sport_Modus_PIN_Leuchte, OUTPUT);
   pinMode(Notbetrieb_PIN_Leuchte, OUTPUT);
