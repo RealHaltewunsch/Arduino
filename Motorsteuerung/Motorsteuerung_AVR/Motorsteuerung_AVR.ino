@@ -29,10 +29,8 @@ Adafruit_SSD1306 display(-1);
 
 //###Pin Zuweisungen
 //Verfügbar: 2,3
-#define Zuendung_PIN_Leuchte 47
 #define Notbetrieb_PIN 28        //Schalter Notbetrieb
 #define Bremse_PIN 3 //noch nicht fest
-#define Zuendung_PIN 18
 #define Sportmodus_PIN 22
 #define ONE_WIRE_BUS 35//noch nicht fest
 #define Uebertemperatur_PIN_Leuchte 46
@@ -78,7 +76,6 @@ uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 //###Auflistung und Zuweisung der Zustände
 //volatile bool Stromregelung = false;
 volatile bool Bremse = true;
-volatile bool Zuendung = false;
 volatile bool Sport_Modus = false;
 volatile bool Notbetrieb = false;
 volatile bool Notbetrieb_alt = false;
@@ -178,7 +175,6 @@ void setup() {
   display.clearDisplay();
   display.display();
 
-  pinMode(Zuendung_PIN_Leuchte, OUTPUT);  //Lampe für Zündung ansprechen
   pinMode(Sport_Modus_PIN_Leuchte, OUTPUT);
   pinMode(Notbetrieb_PIN_Leuchte, OUTPUT);
   pinMode(Regenerativbremsen_PIN_Leuchte, OUTPUT);  //Lampe für Regenerativbremsen ansprechen
@@ -187,8 +183,6 @@ void setup() {
   pinMode(TestLED_PIN, OUTPUT);
   pinMode(Bremse_PIN, INPUT);
   attachInterrupt(digitalPinToInterrupt(Bremse_PIN), Bremse_Auslesen, CHANGE); //Interrupt an den BREMSE_PIN
-  pinMode(Zuendung_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(Zuendung_PIN), Zuendung_auslesen, CHANGE); //Interrupt an Zündung_Pin
   pinMode(Sportmodus_PIN, INPUT_PULLUP);
   pinMode(Notbetrieb_PIN, INPUT_PULLUP);
   pinMode(Gaspedal_check_PIN, INPUT_PULLUP);
@@ -205,7 +199,6 @@ void setup() {
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);
 
   Bremse_Auslesen();
-  Zuendung_auslesen();
   Sport_Modus_auslesen();
   AnalogSensor_Fehler();
   Gaspedal_check();
@@ -226,16 +219,16 @@ void loop() {
 
   int State_alt = State;
 
-  if (!Zuendung || !Gaspedal_angeschlossen) {
+  if (!Gaspedal_angeschlossen || AnalogSensorFehler) {
     State = 0;
   }
-  else if (Notbetrieb && Zuendung) {
+  else if (Notbetrieb && !AnalogSensorFehler) {
     State = 1;
   }
-  else if (Freigabe || Zuendung && Notbetrieb && !Bremse) {
+  else if (Freigabe || Notbetrieb && !Bremse) {
     State = 2;
   }
-  else if (Freigabe || Zuendung && Notbetrieb && Bremse) {
+  else if (Freigabe || Notbetrieb && Bremse) {
     State = 3;
   }
   else {
