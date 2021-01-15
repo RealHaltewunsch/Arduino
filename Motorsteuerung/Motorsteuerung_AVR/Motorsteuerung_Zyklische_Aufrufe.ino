@@ -9,7 +9,6 @@ void  Zyklische_Aufrufe() {
     Schalter();
   }
 
-
   if (currentMillis - previousMillis_Analog_Fehler >= interval_Analog_Fehler) {
     previousMillis_Analog_Fehler = currentMillis;
     AnalogSensor_Fehler();
@@ -34,11 +33,12 @@ void  Zyklische_Aufrufe() {
     }
   */
 
-  if (currentMillis - previousMillis_LED >= interval_LED) {
+  /*if (currentMillis - previousMillis_LED >= interval_LED) {
     previousMillis_LED = currentMillis;
     TestLED = !TestLED;
     digitalWrite(TestLED_PIN, TestLED);
   }
+  */
 
   if (Uebertemperatur) {
     digitalWrite(Uebertemperatur_PIN_Leuchte, HIGH);
