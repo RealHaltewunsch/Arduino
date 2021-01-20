@@ -161,8 +161,8 @@ ADS1115_WE adc(I2C_ADDRESS);
 
 
 void setup() {
-  Serial.begin(9600, SERIAL_8N1);  //Kommunikation mit Leistungselektronik
-  Serial.write(byte(0xE1));   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
+  Serial.begin(9600);  //Kommunikation mit Leistungselektronik
+  Serial.write(byte(0xE0));   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
   Serial.write(byte(0x8A));    //Direction
   Serial.write(byte(0x00));    // STOP
   Serial.write(byte(0x84)); //accel limit
@@ -206,8 +206,6 @@ void setup() {
   Temperatur_start();
 
   OLED_Display();
-
-
 }
 
 void loop() {

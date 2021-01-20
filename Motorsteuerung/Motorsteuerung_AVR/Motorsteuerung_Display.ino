@@ -20,6 +20,8 @@ void OLED_Display() {
   display.print("  ");
   display.print("Gaspedal: ");
   display.print(Gaspedal_angeschlossen);
+  display.print("h");
+  display.print(Sollwert_hex);
   display.setCursor(0, 25);
   display.print("TSensFehl: ");
   display.print(Temperatursensor_Fehler);
