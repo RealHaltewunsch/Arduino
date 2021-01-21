@@ -53,7 +53,7 @@ Adafruit_SSD1306 display(-1);
 #define MAX_VALUE_CURRENT_SPORT 200
 #define MAX_VALUE_CURRENT_LOW 80
 #define MAX_VALUE_CURRENT_NOTBETRIEB 50   //(40/17)hier Strom eintragen <------------------------------------------------------------------------------------------------------
-#define Regen_on 50  //Ampere
+#define Regen_on 20  //Ampere
 #define Regen_off  10   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
@@ -202,7 +202,7 @@ void setup() {
   Sport_Modus_auslesen();
   AnalogSensor_Fehler();
   Gaspedal_check();
-  Regenerativbremsen_Auslesen ();
+  Regenerativbremsen_Auslesen();
   Temperatur_start();
 
   OLED_Display();
