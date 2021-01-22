@@ -52,12 +52,12 @@ Adafruit_SSD1306 display(-1);
 //###Maximalwer Strom, interessant für Den Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 200
 #define MAX_VALUE_CURRENT_LOW 80
-#define MAX_VALUE_CURRENT_NOTBETRIEB 50   //(40/17)hier Strom eintragen <------------------------------------------------------------------------------------------------------
+#define MAX_VALUE_CURRENT_NOTBETRIEB 150   //(40/17)hier Strom eintragen <------------------------------------------------------------------------------------------------------
 #define Regen_on 20  //Ampere
 #define Regen_off  10   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 4566;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
+int GASPEDAL_MAX = 4500;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
 int GASPEDAL_MIN = 937; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
