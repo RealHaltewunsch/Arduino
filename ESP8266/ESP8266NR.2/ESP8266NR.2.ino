@@ -4,8 +4,8 @@
 
 ESP8266WebServer server(80);
 
-const char* ssid = "FRITZ!Box 7590 WF";
-const char* password = "74734480506879452195";
+const char* ssid = "FRITZ!Box 7590 OD";
+const char* password = "74261147202479436268";
 // following for the name of: http://name_esp.local/
 const char* dns_name = "esp8268";
 
