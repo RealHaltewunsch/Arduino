@@ -28,11 +28,11 @@
 Adafruit_SSD1306 display(-1);
 
 //###Pin Zuweisungen
-//Verfügbar: 2,3
+//Verfügbar: 2
 #define Notbetrieb_PIN 28        //Schalter Notbetrieb
-#define Bremse_PIN 3 //noch nicht fest
+#define Bremse_PIN 3
 #define Sportmodus_PIN 22
-#define ONE_WIRE_BUS 35//noch nicht fest
+#define ONE_WIRE_BUS 44
 #define Uebertemperatur_PIN_Leuchte 46
 #define Sport_Modus_PIN_Leuchte 51
 #define Regenerativbremsen_PIN 31
@@ -41,7 +41,6 @@ Adafruit_SSD1306 display(-1);
 #define Freigabe_PIN_Leuchte 49
 #define Gaspedal_check_PIN 19
 #define TestLED_PIN 13
-#define MOSFET 44
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
@@ -51,13 +50,13 @@ Adafruit_SSD1306 display(-1);
 //##############################################################################
 //###Maximalwer Strom, interessant für Den Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 200
-#define MAX_VALUE_CURRENT_LOW 80
+#define MAX_VALUE_CURRENT_LOW 20
 #define MAX_VALUE_CURRENT_NOTBETRIEB 150   //(40/17)hier Strom eintragen <------------------------------------------------------------------------------------------------------
-#define Regen_on 20  //Ampere
-#define Regen_off  10   //Mindestens 10A, da sonst der Motor nicht stoppt
+#define Regen_on 10  //Ampere
+#define Regen_off  5   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 4500;  //Maximalwert der vom gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
+int GASPEDAL_MAX = 4500;  //Maximalwert der vom Gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
 int GASPEDAL_MIN = 937; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
