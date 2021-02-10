@@ -21,7 +21,7 @@ void  Gaspedal () {
   Serial.write(byte(0x80));    //Speed Command
   Serial.write(byte(Sollwert_hex));    //Wert von oben
 }
-}
+
 
 void Gaspedal_check () {
   Gaspedal_angeschlossen = !digitalRead(Gaspedal_check_PIN); //Gaspedal Pin low wenn angeschlossen
