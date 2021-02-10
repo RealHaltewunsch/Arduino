@@ -3,7 +3,7 @@
 //DIP Schalter Leistungselektronik
 //1 OFF
 //2 OFF
-//3 OFF   Peak-Current on
+//3 OFF   Peak-Current off, sonst Drehen die Reifen unkontrollierbar durch
 //4 ON    UART Simple Mode
 //Potentiometer 1 -> Im Uhrzeigersinn bis zum Anschlag
 //Potentiometer 2 -> Gegen Uhrzeigersinn bis zum Anschlag
@@ -216,17 +216,14 @@ void loop() {
 
   int State_alt = State;
 
-  if (!Gaspedal_angeschlossen || AnalogSensorFehler) {
+  if (!Gaspedal_angeschlossen || AnalogSensorFehler) {    //hier muss der Motor stehen bleiben, da das Gaspedal oder Sensor Fehler melden
     State = 0;
   }
-  else if (Notbetrieb && !AnalogSensorFehler) {
+  else if (Notbetrieb && !AnalogSensorFehler && Gaspedal_angeschlossen) {  //Gaspedal und Analogsensor ok, Notbetrieb eingeschaltet
     State = 1;
   }
-  else if (Freigabe || Notbetrieb && !Bremse) {
+  else if (Freigabe) {
     State = 2;
-  }
-  else if (Freigabe || Notbetrieb && Bremse) {
-    State = 3;
   }
   else {
     State = 0;
@@ -234,11 +231,11 @@ void loop() {
 
 
   if (State_alt != State) {
-    switch (State) {  //0 = Stopp, 1 = Notbetrieb&&Zündung, 2 = OK,  3 = OK, Bremse aktiv
-      case 0:             //Stopp
+    switch (State) {  // 1 = Notbetrieb&&keine kritischen Fehler , 2 = OK
+      case 0:             //0 = Stopp oder kritischer Fehler
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x00));    // STOP
-        Serial.write(byte(0x80));    //Direction
+        Serial.write(byte(0x80));    //Speed
         Serial.write(byte(0x00));    // STOP
         break;
       case 1:         // Notbetrieb&&Zündung
@@ -249,15 +246,17 @@ void loop() {
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
         break;
-      case 3:       //Bremse aktiv
-        Serial.write(byte(0x8A));    //Direction
-        Serial.write(byte(0x02));    // REGEN
-        break;
       default: State = 0;
         break;
     }
   }
-  // if (State == 1 || State == 2) {
-  Gaspedal(); //Verändert Sollwert abhängig vom Pedal
-  // }
+  if (State == 1 || State == 2) {
+    Gaspedal(); //Verändert Sollwert abhängig vom Pedal
+  }
+  else {
+    Serial.write(byte(0x8A));    //Direction
+    Serial.write(byte(0x00));    // STOP
+    Serial.write(byte(0x80));    //Speed
+    Serial.write(byte(0x00));    // STOP
+  }
 }
