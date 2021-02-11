@@ -57,8 +57,8 @@ Adafruit_SSD1306 display(-1);
 #define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 4500;  //Maximalwert der vom Gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
-int GASPEDAL_MIN = 937; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
+int GASPEDAL_MAX = 4700;  //Maximalwert der vom Gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
+int GASPEDAL_MIN = 1150; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
