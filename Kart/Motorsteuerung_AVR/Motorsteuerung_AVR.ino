@@ -53,7 +53,8 @@ Adafruit_SSD1306 display(-1);
 #define MAX_VALUE_CURRENT_LOW 20
 #define MAX_VALUE_CURRENT_NOTBETRIEB 50   //hier Strom eintragen <------------------------------------------------------------------------------------------------------
 #define Regen_on 60  //Ampere
-#define Regen_off  10   //Mindestens 10A, da sonst der Motor nicht stoppt
+#define Regen_on_Sport 80  //Ampere
+#define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
 int GASPEDAL_MAX = 4500;  //Maximalwert der vom Gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
