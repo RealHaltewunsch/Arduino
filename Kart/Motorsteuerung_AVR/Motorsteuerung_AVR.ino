@@ -51,7 +51,7 @@ Adafruit_SSD1306 display(-1);
 //###Maximalwer Strom, interessant für Den Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 200
 #define MAX_VALUE_CURRENT_LOW 20
-#define MAX_VALUE_CURRENT_NOTBETRIEB 50   //hier Strom eintragen <------------------------------------------------------------------------------------------------------
+#define MAX_VALUE_CURRENT_NOTBETRIEB 225//hier Strom eintragen <------------------------------------------------------------------------------------------------------
 #define Regen_on 60  //Ampere
 #define Regen_on_Sport 80  //Ampere
 #define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
@@ -181,7 +181,7 @@ void setup() {
   pinMode(Uebertemperatur_PIN_Leuchte, OUTPUT);
   pinMode(Freigabe_PIN_Leuchte, OUTPUT);
   pinMode(TestLED_PIN, OUTPUT);
-  pinMode(Bremse_PIN, INPUT);
+  pinMode(Bremse_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(Bremse_PIN), Bremse_Auslesen, CHANGE); //Interrupt an den BREMSE_PIN
   pinMode(Sportmodus_PIN, INPUT_PULLUP);
   pinMode(Notbetrieb_PIN, INPUT_PULLUP);

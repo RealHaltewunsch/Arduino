@@ -22,7 +22,6 @@ Serial.begin(9600);
 
 void loop() {
   // put your main code here, to run repeatedly:
-
   Sollwert_analog = readChannel(ADS1115_COMP_0_GND);
   Serial.println(Sollwert_analog);
   delay(1000);
