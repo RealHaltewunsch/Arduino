@@ -49,11 +49,11 @@ Adafruit_SSD1306 display(-1);
 #define MIN_TEMP_AKKU 10
 //##############################################################################
 //###Maximalwer Strom, interessant für Den Betriebsmodi, wird per TX/RX übertragen
-#define MAX_VALUE_CURRENT_SPORT 200
-#define MAX_VALUE_CURRENT_LOW 20
-#define MAX_VALUE_CURRENT_NOTBETRIEB 225//hier Strom eintragen <------------------------------------------------------------------------------------------------------
+#define MAX_VALUE_CURRENT_SPORT 300
+#define MAX_VALUE_CURRENT_LOW 80
+#define MAX_VALUE_CURRENT_NOTBETRIEB 20//hier Strom eintragen <------------------------------------------------------------------------------------------------------
 #define Regen_on 60  //Ampere
-#define Regen_on_Sport 80  //Ampere
+#define Regen_on_Sport 125  //Ampere
 #define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
@@ -112,7 +112,6 @@ int Temperaturzaehler = 0;
 
 int Sollwert_analog = 0;
 int Sollwert_relativ = 0;
-int Sollwert_pwm = 0;
 int Sollwert_hex = 0x00;
 
 int Strom = 0;
@@ -139,7 +138,7 @@ const unsigned int interval_Batteriespannung = 2000;  //Wichtig für die Batteri
 unsigned long int previousMillis_Batteriespannung = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_LED = 256;  //Wichtig für die Batteriespannung
 unsigned long int previousMillis_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_Schalter = 512;  //Wichtig für die Batteriespannung
+const unsigned int interval_Schalter = 512;  //Wichtig für die Schalter
 unsigned long int previousMillis_Schalter = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
