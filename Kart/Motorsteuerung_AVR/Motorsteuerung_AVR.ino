@@ -143,7 +143,7 @@ const unsigned int interval_LED = 256;  //Wichtig für die Batteriespannung
 unsigned long int previousMillis_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Schalter = 512;  //Wichtig für die Schalter
 unsigned long int previousMillis_Schalter = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_Leistungselektronik = 4096;  //Wichtig für die Schalter
+const unsigned int interval_Leistungselektronik = 3000;  //Wichtig für die Schalter
 unsigned long int previousMillis_Leistungselektronik = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
