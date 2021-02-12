@@ -16,12 +16,12 @@ void  Zyklische_Aufrufe() {
     AnalogSensor_Fehler();
   }
 
-/*
-  if (currentMillis - previousMillis_OLED >= interval_OLED) {
-    previousMillis_OLED = currentMillis;
-    OLED_Display();
-    display.display();
-  }
+  /*
+    if (currentMillis - previousMillis_OLED >= interval_OLED) {
+      previousMillis_OLED = currentMillis;
+      OLED_Display();
+      display.display();
+    }
   */
 
 

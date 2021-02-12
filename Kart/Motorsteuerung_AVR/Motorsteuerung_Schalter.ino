@@ -1,5 +1,6 @@
 void Schalter () {
   Sport_Modus_auslesen();
   Notbetrieb_auslesen();
-  Regenerativbremsen_Auslesen();
+  Regenerativbremsen_auslesen();
+  Leistungselektronik_auslesen();
 }

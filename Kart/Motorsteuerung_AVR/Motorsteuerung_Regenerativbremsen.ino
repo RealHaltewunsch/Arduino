@@ -1,4 +1,4 @@
-void Regenerativbremsen_Auslesen () {
+void Regenerativbremsen_auslesen () {
   int Strom_regen_hex_alt = Strom_regen_hex;
   Regenerativbremsen = !digitalRead(Regenerativbremsen_PIN);
   digitalWrite(Regenerativbremsen_PIN_Leuchte, Regenerativbremsen);

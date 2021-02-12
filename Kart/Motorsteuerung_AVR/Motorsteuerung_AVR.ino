@@ -40,6 +40,7 @@ Adafruit_SSD1306 display(-1);
 #define Notbetrieb_PIN_Leuchte 50
 #define Freigabe_PIN_Leuchte 49
 #define Gaspedal_check_PIN 19
+#define Leistungselektronik_PIN 40 //??
 #define TestLED_PIN 13
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
@@ -57,7 +58,7 @@ Adafruit_SSD1306 display(-1);
 #define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 4700;  //Maximalwert der vom Gaspedal erreicht werden kann 
+int GASPEDAL_MAX = 4700;  //Maximalwert der vom Gaspedal erreicht werden kann
 int GASPEDAL_MIN = 1150; //Offset Spannung Gaspedal in mV
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
@@ -96,6 +97,8 @@ bool Geschwindigkeit_Vorzeichen_alt = false; //verwirrendes Konzept, aber das wi
 bool Geschwindigkeit_Vorzeichen = false; //verwirrendes Konzept, aber das wird benötigt, da sonst ein Anzeigefehler ensteht wenn man von negativ zu positiv wechselt...
 bool OLED_Reset = false;
 bool OLED_Reset_alt = false;
+bool Leistungselektronik_start = true;    //wird von dem DigitalPin auf true gesetzt und von der Funktion zurückgesetzt
+bool Leistungselektronik_check = false;   //wird genutzt um Rechenleistung zu sparen
 //##############################################################################
 int Temperatur_Akku_1 = 0;
 int Temperatur_Akku_2 = 0;
@@ -140,6 +143,8 @@ const unsigned int interval_LED = 256;  //Wichtig für die Batteriespannung
 unsigned long int previousMillis_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Schalter = 512;  //Wichtig für die Schalter
 unsigned long int previousMillis_Schalter = 0; //speichert den Zeitpunkt des letzten durchgehens
+const unsigned int interval_Leistungselektronik = 4096;  //Wichtig für die Schalter
+unsigned long int previousMillis_Leistungselektronik = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
 unsigned long int Interval_auslesen_verstrichen = 0;
@@ -156,7 +161,6 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 ADS1115_WE adc(I2C_ADDRESS);
-
 
 
 void setup() {
@@ -187,6 +191,7 @@ void setup() {
   pinMode(Gaspedal_check_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(Gaspedal_check_PIN), Gaspedal_check, CHANGE);
   pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
+  pinMode(Leistungselektronik_PIN, INPUT);
 
   Lampentest();
 
@@ -200,10 +205,9 @@ void setup() {
   Bremse_Auslesen();
   AnalogSensor_Fehler();
   Gaspedal_check();
-
   Temperatur_start();
-
   OLED_Display();
+  Initialwerte_schreiben();
 }
 
 void loop() {
