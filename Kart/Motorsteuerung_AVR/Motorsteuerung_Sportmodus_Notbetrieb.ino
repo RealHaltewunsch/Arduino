@@ -1,10 +1,11 @@
 void Sport_Modus_auslesen() {
   int Strom_hex_alt = Strom_hex;
-  if (digitalRead(Notbetrieb_PIN) && !digitalRead(Sportmodus_PIN)) { //Wenn PIN HIGH dann kein Sport Modus
+  bool Sportmodus_state = digitalRead(Sportmodus_PIN);
+  if (Notbetrieb && !Sportmodus_state) { //Wenn PIN HIGH dann kein Sport Modus
     Sport_Modus = true;
     Strom_hex = map(MAX_VALUE_CURRENT_SPORT, 0, 434, 0x00, 0x7F);
   }
-  else if (digitalRead(Notbetrieb_PIN) && digitalRead(Sportmodus_PIN)) {
+  else if (Notbetrieb && Sportmodus_state) {
     Sport_Modus = false;
     Strom_hex = map(MAX_VALUE_CURRENT_LOW, 0, 434, 0x00, 0x7F);   //Sportmodus deaktiviert, Notbetrieb aus
   }
