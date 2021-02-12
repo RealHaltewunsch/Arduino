@@ -49,16 +49,16 @@ Adafruit_SSD1306 display(-1);
 #define MIN_TEMP_AKKU 10
 //##############################################################################
 //###Maximalwer Strom, interessant für Den Betriebsmodi, wird per TX/RX übertragen
-#define MAX_VALUE_CURRENT_SPORT 300
-#define MAX_VALUE_CURRENT_LOW 80
-#define MAX_VALUE_CURRENT_NOTBETRIEB 20//hier Strom eintragen <------------------------------------------------------------------------------------------------------
+#define MAX_VALUE_CURRENT_SPORT 300 //Ampere
+#define MAX_VALUE_CURRENT_LOW 80 //Ampere
+#define MAX_VALUE_CURRENT_NOTBETRIEB 20 //Ampere
 #define Regen_on 60  //Ampere
 #define Regen_on_Sport 125  //Ampere
 #define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 4700;  //Maximalwert der vom Gaspedal erreicht werden kann <-----------------------------------------------------------------------------------------
-int GASPEDAL_MIN = 1150; //Offset Spannung Gaspedal in mV  <-------------------------------------------------------------------------------------------------------------
+int GASPEDAL_MAX = 4700;  //Maximalwert der vom Gaspedal erreicht werden kann 
+int GASPEDAL_MIN = 1150; //Offset Spannung Gaspedal in mV
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
