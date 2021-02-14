@@ -67,10 +67,10 @@ void setup() {
 
   pixels.show(); // Durchführen der Pixel-Ansteuerung
 
-  IPAddress ip(192, 168, 178, 220);
-  IPAddress gateway(192, 168, 178, 1);
+  IPAddress ip(192, 168, 180, 220);
+  IPAddress gateway(192, 168, 180, 1);
   IPAddress subnet(255, 255, 255, 0);
-  IPAddress dns(192, 168, 178, 1);
+  IPAddress dns(192, 168, 180, 1);
   WiFi.config(ip, dns, gateway, subnet);
   WiFi.softAPdisconnect(true);
   WiFi.mode(WIFI_STA);
