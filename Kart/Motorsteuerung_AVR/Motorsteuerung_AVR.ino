@@ -40,7 +40,7 @@ Adafruit_SSD1306 display(-1);
 #define Notbetrieb_PIN_Leuchte 50
 #define Freigabe_PIN_Leuchte 49
 #define Gaspedal_check_PIN 19
-#define Leistungselektronik_PIN 40 //??
+#define Leistungselektronik_PIN 40 //an Lila anschließen
 #define TestLED_PIN 13
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
@@ -99,6 +99,7 @@ bool OLED_Reset = false;
 bool OLED_Reset_alt = false;
 bool Leistungselektronik_start = true;    //wird von dem DigitalPin auf true gesetzt und von der Funktion zurückgesetzt
 bool Leistungselektronik_check = false;   //wird genutzt um Rechenleistung zu sparen
+bool Leistungselektronik = false;
 //##############################################################################
 int Temperatur_Akku_1 = 0;
 int Temperatur_Akku_2 = 0;
@@ -191,16 +192,14 @@ void setup() {
   pinMode(Gaspedal_check_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(Gaspedal_check_PIN), Gaspedal_check, CHANGE);
   pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
-  pinMode(Leistungselektronik_PIN, INPUT);
+  pinMode(Leistungselektronik_PIN, INPUT_PULLUP);   //wird vom Optokoppler auf Masse gezogen
 
   Lampentest();
 
   adc.init();
   adc.setVoltageRange_mV(ADS1115_RANGE_6144);   //maximal 5000 mV
   adc.setConvRate(ADS1115_860_SPS);
-  adc.setVoltageRange_mV(ADS1115_RANGE_6144);
   adc.setMeasureMode(ADS1115_SINGLE);
-  adc.setVoltageRange_mV(ADS1115_RANGE_6144);
 
   Bremse_Auslesen();
   AnalogSensor_Fehler();
