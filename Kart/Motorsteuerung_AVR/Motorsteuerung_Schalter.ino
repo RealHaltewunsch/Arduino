@@ -3,4 +3,5 @@ void Schalter () {
   Notbetrieb_auslesen();
   Regenerativbremsen_auslesen();
   Leistungselektronik_auslesen();
+  Freigabe_Check();
 }
