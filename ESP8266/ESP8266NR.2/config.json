@@ -1,82 +1,55 @@
 {
     "bridge": {
         "name": "Homebridge",
-        "username": "0E:C1:39:D7:EA:AB",
+        "username": "0E:94:A1:3F:81:BB",
         "port": 51826,
-        "pin": "931-64-422"
+        "pin": "104-27-700"
     },
     "accessories": [
-        {
-            "accessory": "HTTP-SWITCH",
-            "name": "Pumpe",
-            "switchType": "stateful",
-            "httpMethod": "POST",
-            "onUrl": "http://192.168.178.221/D2_on",
-            "offUrl": "http://192.168.178.221/D2_off",
-            "statusUrl": "http://192.168.178.221/D2_state"
-        },
         {
             "accessory": "HTTP-SWITCH",
             "name": "3D-Drucker",
             "switchType": "stateful",
             "httpMethod": "POST",
-            "onUrl": "http://192.168.178.221/D7_on",
-            "offUrl": "http://192.168.178.221/D7_off",
-            "statusUrl": "http://192.168.178.221/D7_state"
+            "onUrl": "http://192.168.180.221/D7_on",
+            "offUrl": "http://192.168.180.221/D7_off",
+            "statusUrl": "http://192.168.180.221/D7_state"
         },
         {
             "accessory": "HTTP-SWITCH",
             "name": "Netzteil",
             "switchType": "stateful",
             "httpMethod": "POST",
-            "onUrl": "http://192.168.178.221/D4_on",
-            "offUrl": "http://192.168.178.221/D4_off",
-            "statusUrl": "http://192.168.178.221/D4_state"
+            "onUrl": "http://192.168.180.221/D4_on",
+            "offUrl": "http://192.168.180.221/D4_off",
+            "statusUrl": "http://192.168.180.221/D4_state"
         },
         {
             "accessory": "HTTP-SWITCH",
             "name": "Drucker Lüfter",
             "switchType": "stateful",
             "httpMethod": "POST",
-            "onUrl": "http://192.168.178.221/D5_on",
-            "offUrl": "http://192.168.178.221/D5_off",
-            "statusUrl": "http://192.168.178.221/D5_state"
-        },
-        {
-            "accessory": "HTTP-SWITCH",
-            "name": "Kakteen Lampe",
-            "switchType": "stateful",
-            "httpMethod": "POST",
-            "onUrl": "http://192.168.178.221/D6_on",
-            "offUrl": "http://192.168.178.221/D6_off",
-            "statusUrl": "http://192.168.178.221/D6_state"
-        },
-        {
-            "accessory": "HTTP-DIMMER",
-            "name": "Fischlampe",
-            "onUrl": "http://192.168.178.221/D0_on",
-            "offUrl": "http://192.168.178.221/D0_off",
-            "statusUrl": "http://192.168.178.221/D0_state",
-            "setBrightnessUrl": "http://192.168.178.221/D0_setBrightness?brightness=",
-            "getBrightnessUrl": "http://192.168.178.221/D0_getBrightness"
+            "onUrl": "http://192.168.180.221/D5_on",
+            "offUrl": "http://192.168.180.221/D5_off",
+            "statusUrl": "http://192.168.180.221/D5_state"
         },
         {
             "accessory": "HTTP-DIMMER",
             "name": "Drucker Lampe",
-            "onUrl": "http://192.168.178.221/LED_on",
-            "offUrl": "http://192.168.178.221/LED_off",
-            "statusUrl": "http://192.168.178.221/LED_state",
-            "setBrightnessUrl": "http://192.168.178.221/LED_setBrightness?brightness=",
-            "getBrightnessUrl": "http://192.168.178.221/LED_getBrightness"
+            "onUrl": "http://192.168.180.221/LED_on",
+            "offUrl": "http://192.168.180.221/LED_off",
+            "statusUrl": "http://192.168.180.221/LED_state",
+            "setBrightnessUrl": "http://192.168.180.221/LED_setBrightness?brightness=",
+            "getBrightnessUrl": "http://192.168.180.221/LED_getBrightness"
         },
         {
             "accessory": "HTTP-DIMMER",
             "name": "Atompilz Lampe",
-            "onUrl": "http://192.168.178.220/D0_on",
-            "offUrl": "http://192.168.178.220/D0_off",
-            "statusUrl": "http://192.168.178.220/D0_state",
-            "setBrightnessUrl": "http://192.168.178.220/D0_setBrightness?brightness=",
-            "getBrightnessUrl": "http://192.168.178.220/D0_getBrightness"
+            "onUrl": "http://192.168.180.220/D0_on",
+            "offUrl": "http://192.168.180.220/D0_off",
+            "statusUrl": "http://192.168.180.220/D0_state",
+            "setBrightnessUrl": "http://192.168.180.220/D0_setBrightness?brightness=",
+            "getBrightnessUrl": "http://192.168.180.220/D0_getBrightness"
         }
     ],
     "platforms": [
