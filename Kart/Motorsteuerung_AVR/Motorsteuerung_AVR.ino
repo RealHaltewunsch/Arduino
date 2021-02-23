@@ -42,14 +42,18 @@ Adafruit_SSD1306 display(-1);
 #define Gaspedal_check_PIN 19
 #define Leistungselektronik_PIN 40 //an Lila anschließen
 #define TestLED_PIN 13
+#define Rueckwaerts_PIN 18    //an die alte Zündung anschließen, gelb
+#define Rueckwaerts_PIN_Leuchte 99   //an die alte Lampe Zündung anschließen...........................................
+#define Spule_Rueckwaerts 31  //noch nicht fest
+#define Spule_Vorwaerts 32     //noch nicht fest
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
 #define MAX_TEMP_AKKU_RUN 50
 #define MAX_TEMP_MOTOR 110
-#define MIN_TEMP_AKKU 10
+#define MIN_TEMP_AKKU 5
 //##############################################################################
-//###Maximalwer Strom, interessant für Den Betriebsmodi, wird per TX/RX übertragen
+//###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 300 //Ampere
 #define MAX_VALUE_CURRENT_LOW 80 //Ampere
 #define MAX_VALUE_CURRENT_NOTBETRIEB 20 //Ampere
@@ -79,8 +83,10 @@ uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 volatile bool Bremse = true;
 volatile bool Sport_Modus = false;
 volatile bool Notbetrieb = false;
-volatile bool Notbetrieb_alt = false;
 volatile bool Gaspedal_angeschlossen = false;
+volatile bool Rueckwaertsgang = false;
+volatile bool Gang_wechseln = false;
+bool Gang_wechseln_delay = false; //erzeugt einen kleinen Delay bevor der Gang gewechselt wird
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
 bool Temperatursensor_Fehler = true;
@@ -90,13 +96,6 @@ bool Temperatur_LED_Zustand = false;
 bool Temperatursensor_Fehler_LED_Zustand = false;
 bool TestLED = false;
 bool Regenerativbremsen = false;
-//OLED Fehler beseitgen und dabei wenig Speicher und Rechenzeit benötigende Variablen
-bool Geschwindigkeit_gross_alt = false; //verwirrendes Konzept, aber das wird benötigt, da sonst ein Anzeigefehler ensteht wenn man von einer einstellingen Geschwindigkeit zu einer zweistelligen Geschwindigkeit wechselt
-bool Geschwindigkeit_gross = false; //verwirrendes Konzept, aber das wird benötigt, da sonst ein Anzeigefehler ensteht wenn man von einer einstellingen Geschwindigkeit zu einer zweistelligen Geschwindigkeit wechselt
-bool Geschwindigkeit_Vorzeichen_alt = false; //verwirrendes Konzept, aber das wird benötigt, da sonst ein Anzeigefehler ensteht wenn man von negativ zu positiv wechselt...
-bool Geschwindigkeit_Vorzeichen = false; //verwirrendes Konzept, aber das wird benötigt, da sonst ein Anzeigefehler ensteht wenn man von negativ zu positiv wechselt...
-bool OLED_Reset = false;
-bool OLED_Reset_alt = false;
 bool Leistungselektronik_start = true;    //wird von dem DigitalPin auf true gesetzt und von der Funktion zurückgesetzt
 bool Leistungselektronik_check = false;   //wird genutzt um Rechenleistung zu sparen
 bool Leistungselektronik = false;
@@ -193,6 +192,12 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(Gaspedal_check_PIN), Gaspedal_check, CHANGE);
   pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
   pinMode(Leistungselektronik_PIN, INPUT_PULLUP);   //wird vom Optokoppler auf Masse gezogen
+  pinMode(Rueckwaerts_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, CHANGE);
+  pinMode(Spule_Rueckwaerts, OUTPUT);
+  pinMode(Spule_Vorwaerts, OUTPUT);
+  pinMode(Rueckwaerts_PIN_Leuchte, OUTPUT);
+
 
   Lampentest();
 
@@ -206,6 +211,8 @@ void setup() {
   Gaspedal_check();
   Temperatur_start();
   OLED_Display();
+  Rueckwaerts_auslesen();
+  Gang_Wechsel();
   Initialwerte_schreiben();
 }
 
@@ -240,7 +247,7 @@ void loop() {
         Serial.write(byte(0x80));    //Speed
         Serial.write(byte(0x00));    // STOP
         break;
-      case 1:         // Notbetrieb&&Zündung
+      case 1:         // Notbetrieb && Sensoren ok
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
         break;
