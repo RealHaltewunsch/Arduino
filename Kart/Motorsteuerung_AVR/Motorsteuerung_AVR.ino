@@ -57,6 +57,7 @@ Adafruit_SSD1306 display(-1);
 #define MAX_VALUE_CURRENT_SPORT 300 //Ampere
 #define MAX_VALUE_CURRENT_LOW 80 //Ampere
 #define MAX_VALUE_CURRENT_NOTBETRIEB 20 //Ampere
+#define MAX_VALUE_CURRENT_RUECKWAERTS 10//Ampere
 #define Regen_on 60  //Ampere
 #define Regen_on_Sport 125  //Ampere
 #define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
