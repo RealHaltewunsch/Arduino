@@ -247,12 +247,17 @@ void loop() {
         Serial.write(byte(0x00));    // STOP
         Serial.write(byte(0x80));    //Speed
         Serial.write(byte(0x00));    // STOP
+        digitalWrite(Spule_Vorwaerts, LOW);
+        digitalWrite(Spule_Rueckwaerts, LOW);
         break;
       case 1:         // Notbetrieb && Sensoren ok
+        Gang_wechseln = true;
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
+
         break;
       case 2:       //Alles OK
+        Gang_wechseln = true;
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
         break;
