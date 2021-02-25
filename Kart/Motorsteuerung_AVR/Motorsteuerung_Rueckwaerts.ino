@@ -1,16 +1,11 @@
 void Rueckwaerts_auslesen() {
   volatile bool Rueckwaertsgang_alt = Rueckwaertsgang;
-  if (Bremse && !digitalRead(Rueckwaerts_PIN)) {    //wenn der PIN LOW ist, dann Rückwärts fahren, sonst Vorwärts
-    Rueckwaertsgang = true;
-  }
-  else {
-    Rueckwaertsgang = false;
-  }
-
-  if (Rueckwaertsgang_alt != Rueckwaertsgang) {
+  if (Bremse) {    //wenn der PIN LOW ist, dann Rückwärts fahren, sonst Vorwärts
+    Rueckwaertsgang = !Rueckwaertsgang;
     Gang_wechseln = true;
+    digitalWrite(Rueckwaerts_PIN_Leuchte, Rueckwaertsgang);   //Lampe Leuchtet, wenn Rückwärtsgang eingelegt ist
+
   }
-  digitalWrite(Rueckwaerts_PIN_Leuchte, Rueckwaertsgang);   //Lampe Leuchtet, wenn Rückwärtsgang eingelegt ist
 }
 
 
