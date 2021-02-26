@@ -194,7 +194,7 @@ void setup() {
   pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
   pinMode(Leistungselektronik_PIN, INPUT_PULLUP);   //wird vom Optokoppler auf Masse gezogen
   pinMode(Rueckwaerts_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, RISING);
   pinMode(Spule_Rueckwaerts, OUTPUT);
   pinMode(Spule_Vorwaerts, OUTPUT);
   pinMode(Rueckwaerts_PIN_Leuchte, OUTPUT);
