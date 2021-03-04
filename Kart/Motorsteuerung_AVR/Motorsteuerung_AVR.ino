@@ -51,6 +51,7 @@ Adafruit_SSD1306 display(-1);
 #define MAX_TEMP_AKKU_STARTUP 45
 #define MAX_TEMP_AKKU_RUN 50
 #define MAX_TEMP_MOTOR 110
+#define MAX_TEMP_LEISTUNGSELEKTRONIK 60
 #define MIN_TEMP_AKKU 5
 //##############################################################################
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
@@ -74,10 +75,7 @@ uint8_t Temperatursensor_Akku_4[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 uint8_t Temperatursensor_Akku_5[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t Temperatursensor_Akku_6[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-//uint8_t Temperatursensor_Leistungselektronik_1 [8] = { 0x28, 0xD3, 0x13, 0x79, 0xA2, 0x00, 0x03, 0xD1 };
-//uint8_t Temperatursensor_Leistungselektronik_2 [8] = { 0x28, 0xCE, 0x06, 0x45, 0x92, 0x16, 0x02, 0xF2 };
-//uint8_t Temperatursensor_Leistungselektronik_3 [8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-// 0x28, 0x77, 0x10, 0x79, 0xA2, 0x00, 0x03, 0x1F //Kabel sind falsch Angschlossen, plus an schwarz und minus an rot
+uint8_t Temperatursensor_Leistungselektronik [8] = { 0x28, 0xCE, 0x06, 0x45, 0x92, 0x16, 0x02, 0xF2 };
 //##############################################################################
 //###Auflistung und Zuweisung der Zustände
 //volatile bool Stromregelung = false;
@@ -112,7 +110,6 @@ int Temperatur_Akku_Max = 0;
 int Temperatur_Akku_Min = 0;
 int Temperatur_Motor = 0;
 int Temperatur_Leistungselektronik = 0;
-int Temperatur_Leistungselektronik_hex = 0;
 int Temperaturzaehler = 0;
 
 int Sollwert_analog = 0;

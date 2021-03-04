@@ -39,7 +39,7 @@ void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursen
       Temperaturzaehler++;
       break;
     case 7:
-      //Serial.write(byte(0xCE));    //Temperatur erfragen
+      Temperatur_Leistungselektronik = sensors.getTempC(Temperatursensor_Leistungselektronik);
       Temperaturzaehler = 0;
       break;
     default:
@@ -52,10 +52,10 @@ void Temperaturen () {  //bei jedem Durchlauf wird nur ein anderer Temperatursen
 }
 
 void Temperatur_check() {
-  if (MAX_TEMP_AKKU_RUN <= Temperatur_Akku_Max || MAX_TEMP_MOTOR <= Temperatur_Motor) { //wenn True dann Überhitzt
+  if (MAX_TEMP_AKKU_RUN <= Temperatur_Akku_Max || MAX_TEMP_MOTOR <= Temperatur_Motor || MAX_TEMP_LEISTUNGSELEKTRONIK <= Temperatur_Leistungselektronik) { //wenn True dann Überhitzt
     Uebertemperatur = true;
   }
-  else if (MAX_TEMP_AKKU_STARTUP - 5 > Temperatur_Akku_Max && MAX_TEMP_MOTOR - 20 > Temperatur_Motor) { //wenn True dann um 10 bzw. 20 Grad runter gekühlt
+  else if (MAX_TEMP_AKKU_STARTUP - 5 > Temperatur_Akku_Max && MAX_TEMP_MOTOR - 20 > Temperatur_Motor && MAX_TEMP_LEISTUNGSELEKTRONIK - 10 > Temperatur_Leistungselektronik) { //wenn True dann um 10 bzw. 20 Grad runter gekühlt
     Uebertemperatur = false;
   }
   //ab hier wird die Untertemperatur ausgelesen
@@ -66,7 +66,7 @@ void Temperatur_check() {
     Untertemperatur = false;
   }
   //ab hier Temperatursensorfehler überprüfen
-  if (Temperatur_Akku_Min == -127 || Temperatur_Motor == -127) {
+  if (Temperatur_Akku_Min == -127 || Temperatur_Motor == -127 || Temperatur_Leistungselektronik == -127) {
     Temperatursensor_Fehler = true;
   }
   else {
@@ -86,13 +86,16 @@ void Temperatur_start () {
   sensors.setResolution(Temperatursensor_Akku_5, 9);
   sensors.setResolution(Temperatursensor_Akku_6, 9);
   sensors.setResolution(Temperatursensor_Motor, 9);
+  sensors.setResolution(Temperatursensor_Motor, 9);
   Temperatur_Motor = sensors.getTempC(Temperatursensor_Motor);
+  Temperatur_Motor = sensors.getTempC(Temperatursensor_Leistungselektronik);
   Temperatur_Akku_1 = sensors.getTempC(Temperatursensor_Akku_1);
   Temperatur_Akku_2 = sensors.getTempC(Temperatursensor_Akku_2);
   Temperatur_Akku_3 = sensors.getTempC(Temperatursensor_Akku_3);
   Temperatur_Akku_4 = sensors.getTempC(Temperatursensor_Akku_4);
   Temperatur_Akku_5 = sensors.getTempC(Temperatursensor_Akku_5);
   Temperatur_Akku_6 = sensors.getTempC(Temperatursensor_Akku_6);
+  Temperatur_Leistungselektronik = sensors.getTempC(Temperatursensor_Leistungselektronik);
   Temperatur_Akku_Min = min (Temperatur_Akku_1, Temperatur_Akku_2);
   Temperatur_Akku_Min = min (Temperatur_Akku_Min, Temperatur_Akku_3);
   Temperatur_Akku_Min = min (Temperatur_Akku_Min, Temperatur_Akku_4);
