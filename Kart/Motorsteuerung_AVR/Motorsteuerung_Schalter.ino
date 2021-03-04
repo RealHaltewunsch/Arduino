@@ -4,9 +4,8 @@ void Schalter () {
   Regenerativbremsen_auslesen();
   Leistungselektronik_auslesen();
   Freigabe_Check();
-  if (Gang_wechseln) {
-    digitalWrite(Rueckwaerts_PIN_Leuchte, Rueckwaertsgang);   //Lampe Leuchtet, wenn Rückwärtsgang eingelegt ist
-    if (Gang_wechseln_delay) {        //bei diesem Durchlauf wird die Ausgangssituation hergestellt
+  if (Gang_wechseln) {   
+     if (Gang_wechseln_delay) {        //bei diesem Durchlauf wird die Ausgangssituation hergestellt
       Gang_Wechsel();
       Gang_wechseln_delay = false;
     }

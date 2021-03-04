@@ -8,6 +8,7 @@ void Initialwerte_schreiben () {
   Serial.write(byte(0x00)); //min
   Strom_hex = 0x00;
   Strom_regen_hex = 0x00;
+  Strom_Rueckwaerts_hex = map(MAX_VALUE_CURRENT_RUECKWAERTS, 0, 434, 0x00, 0x7F);
   Schalter();
   Leistungselektronik_start = false;
 }

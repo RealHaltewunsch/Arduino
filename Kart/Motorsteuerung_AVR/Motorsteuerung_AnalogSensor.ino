@@ -10,9 +10,10 @@ void AnalogSensor_Fehler () {
 
 void  Gaspedal () {
   Sollwert_analog = readChannel(ADS1115_COMP_0_GND); //
-  if (Sollwert_analog > GASPEDAL_MIN && !Bremse && !Gang_wechseln) {
+  if (Sollwert_analog > GASPEDAL_MIN && !Gang_wechseln) {
     Sollwert_relativ = constrain(Sollwert_analog, GASPEDAL_MIN, GASPEDAL_MAX);  //0-100% relativ gesehen
     Sollwert_hex = map (Sollwert_relativ, GASPEDAL_MIN, GASPEDAL_MAX, 0x00, 0x7F);  //analogWrite Wert absolut gesehen
+    previousMillis_Inaktiv = currentMillis;
   }
   else {
     Sollwert_hex = 0x00;

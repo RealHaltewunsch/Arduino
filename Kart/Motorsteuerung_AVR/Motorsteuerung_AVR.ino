@@ -43,9 +43,9 @@ Adafruit_SSD1306 display(-1);
 #define Leistungselektronik_PIN 40 //an Lila anschließen
 #define TestLED_PIN 13
 #define Rueckwaerts_PIN 18    //an die alte Zündung anschließen, gelb
-#define Rueckwaerts_PIN_Leuchte 99   //an die alte Lampe Zündung anschließen...........................................
-#define Spule_Rueckwaerts 31  //noch nicht fest
-#define Spule_Vorwaerts 32     //noch nicht fest
+#define Rueckwaerts_PIN_Leuchte 47   //an die alte Lampe Zündung anschließen...........................................
+#define Spule_Rueckwaerts 43  //noch nicht fest
+#define Spule_Vorwaerts 42     //noch nicht fest
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
@@ -99,6 +99,7 @@ bool Regenerativbremsen = false;
 bool Leistungselektronik_start = true;    //wird von dem DigitalPin auf true gesetzt und von der Funktion zurückgesetzt
 bool Leistungselektronik_check = false;   //wird genutzt um Rechenleistung zu sparen
 bool Leistungselektronik = false;
+bool Rueckwaerts_LED = false;
 //##############################################################################
 int Temperatur_Akku_1 = 0;
 int Temperatur_Akku_2 = 0;
@@ -119,6 +120,7 @@ int Sollwert_hex = 0x00;
 int Strom = 0;
 int Strom_hex = 0x00;
 int Strom_regen_hex = 0x00;
+int Strom_Rueckwaerts_hex = 0x00;
 
 int Batteriespannung = 0;
 int Batteriespannung_hex = 0x00;
@@ -144,8 +146,10 @@ const unsigned int interval_Schalter = 512;  //Wichtig für die Schalter
 unsigned long int previousMillis_Schalter = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Leistungselektronik = 3000;  //Wichtig für die Schalter
 unsigned long int previousMillis_Leistungselektronik = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_Rueckwaerts = 500;  //Wichtig für die LED Rückwärtsgang
+const unsigned int interval_Rueckwaerts = 512;  //Wichtig für die LED Rückwärtsgang
 unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des letzten durchgehens
+const unsigned int interval_Inaktiv = 600000;  //Wichtig für das abschalten des großen Relais
+unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
 unsigned long int Interval_auslesen_verstrichen = 0;
@@ -212,8 +216,6 @@ void setup() {
   Gaspedal_check();
   Temperatur_start();
   OLED_Display();
-  Rueckwaerts_auslesen();
-  Gang_Wechsel();
   Initialwerte_schreiben();
 }
 
@@ -222,11 +224,12 @@ void loop() {
   currentMillis = millis();
   Zyklische_Aufrufe();
 
-
-
   int State_alt = State;
 
   if (!Gaspedal_angeschlossen || AnalogSensorFehler) {    //hier muss der Motor stehen bleiben, da das Gaspedal oder Sensor Fehler melden
+    State = 0;
+  }
+  else if (!Notbetrieb && !Freigabe){
     State = 0;
   }
   else if (Notbetrieb && !AnalogSensorFehler && Gaspedal_angeschlossen) {  //Gaspedal und Analogsensor ok, Notbetrieb eingeschaltet
@@ -248,12 +251,12 @@ void loop() {
         Serial.write(byte(0x80));    //Speed
         Serial.write(byte(0x00));    // STOP
         Neutral = true;
+        Gang_wechseln = true;
         break;
       case 1:         // Notbetrieb && Sensoren ok
         Gang_wechseln = true;
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
-
         break;
       case 2:       //Alles OK
         Gang_wechseln = true;
