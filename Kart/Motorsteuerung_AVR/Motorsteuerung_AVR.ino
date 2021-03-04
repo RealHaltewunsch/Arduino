@@ -87,6 +87,7 @@ volatile bool Notbetrieb = false;
 volatile bool Gaspedal_angeschlossen = false;
 volatile bool Rueckwaertsgang = false;
 volatile bool Gang_wechseln = false;
+volatile bool Neutral = true;
 bool Gang_wechseln_delay = false; //erzeugt einen kleinen Delay bevor der Gang gewechselt wird
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
@@ -146,6 +147,8 @@ const unsigned int interval_Schalter = 512;  //Wichtig für die Schalter
 unsigned long int previousMillis_Schalter = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Leistungselektronik = 3000;  //Wichtig für die Schalter
 unsigned long int previousMillis_Leistungselektronik = 0; //speichert den Zeitpunkt des letzten durchgehens
+const unsigned int interval_Rueckwaerts = 500;  //Wichtig für die LED Rückwärtsgang
+unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
 unsigned long int Interval_auslesen_verstrichen = 0;
@@ -247,8 +250,7 @@ void loop() {
         Serial.write(byte(0x00));    // STOP
         Serial.write(byte(0x80));    //Speed
         Serial.write(byte(0x00));    // STOP
-        digitalWrite(Spule_Vorwaerts, LOW);
-        digitalWrite(Spule_Rueckwaerts, LOW);
+        Neutral = true;
         break;
       case 1:         // Notbetrieb && Sensoren ok
         Gang_wechseln = true;
