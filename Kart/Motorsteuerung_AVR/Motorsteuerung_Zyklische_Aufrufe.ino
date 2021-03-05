@@ -30,11 +30,14 @@ void  Zyklische_Aufrufe() {
     }
   */
 
-  if (currentMillis - previousMillis_Inaktiv >= interval_Inaktiv) {
-    previousMillis_Inaktiv = currentMillis;
+  if (currentMillis - previousMillis_Inaktiv >= interval_Inaktiv && !Inaktiv) {
     Neutral = true;
     Gang_wechseln = true;
-  }
+    Inaktiv = true;
+}
+else {
+  Inaktiv = false;;
+}
 
   if (currentMillis - previousMillis_LED >= interval_LED) {
     previousMillis_LED = currentMillis;

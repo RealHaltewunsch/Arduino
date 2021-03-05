@@ -8,6 +8,7 @@ void Schalter () {
      if (Gang_wechseln_delay) {        //bei diesem Durchlauf wird die Ausgangssituation hergestellt
       Gang_Wechsel();
       Gang_wechseln_delay = false;
+      previousMillis_Inaktiv = currentMillis;
     }
     else {
       Serial.write(byte(0x8A));    //Direction

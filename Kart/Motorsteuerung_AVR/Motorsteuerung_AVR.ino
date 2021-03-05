@@ -100,6 +100,7 @@ bool Leistungselektronik_start = true;    //wird von dem DigitalPin auf true ges
 bool Leistungselektronik_check = false;   //wird genutzt um Rechenleistung zu sparen
 bool Leistungselektronik = false;
 bool Rueckwaerts_LED = false;
+bool Inaktiv = false;
 //##############################################################################
 int Temperatur_Akku_1 = 0;
 int Temperatur_Akku_2 = 0;
@@ -148,7 +149,7 @@ const unsigned int interval_Leistungselektronik = 3000;  //Wichtig für die Scha
 unsigned long int previousMillis_Leistungselektronik = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Rueckwaerts = 512;  //Wichtig für die LED Rückwärtsgang
 unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_Inaktiv = 600000;  //Wichtig für das abschalten des großen Relais
+const unsigned int interval_Inaktiv = 60000;  //Wichtig für das abschalten des großen Relais
 unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
