@@ -13,19 +13,17 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <stdlib.h>
-#include<ADS1115_WE.h>
-#include<Wire.h>
+//#include<Wire.h>
 #include <Adafruit_GFX.h>
 #include <Fonts/myownfont.h>
-#include <Adafruit_SSD1306.h>
+//#include <Adafruit_SSD1306.h>
 
 //##############################################################################
-//####I2C Adressen & AnalogSensor
-//I2C Pins: 20 (SDA), 21 (SCL) //für den Display und analog Sensor interessant
-#define I2C_ADDRESS 0x48    //Adresse für den AnalogSensor
+//####I2C Adresse
+//#define OLED_ADDR   0x3C
 //##############################################################################
-#define OLED_ADDR   0x3C
-Adafruit_SSD1306 display(-1);
+//#define OLED_ADDR   0x3C
+//Adafruit_SSD1306 display(-1);
 
 //###Pin Zuweisungen
 //Verfügbar: 2
@@ -64,8 +62,8 @@ Adafruit_SSD1306 display(-1);
 #define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 4700;  //Maximalwert der vom Gaspedal erreicht werden kann
-int GASPEDAL_MIN = 1150; //Offset Spannung Gaspedal in mV
+int GASPEDAL_MAX = 999;  //Maximalwert der vom Gaspedal erreicht werden kann
+int GASPEDAL_MIN = 100; //Offset Spannung Gaspedal in mV
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -115,7 +113,6 @@ int Temperatur_Leistungselektronik = 0;
 int Temperaturzaehler = 0;
 
 int Sollwert_analog = 0;
-int Sollwert_relativ = 0;
 int Sollwert_hex = 0x00;
 
 int Strom = 0;
@@ -166,8 +163,6 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
-ADS1115_WE adc(I2C_ADDRESS);
-
 
 void setup() {
   Serial.begin(9600);  //Kommunikation mit Leistungselektronik
@@ -179,10 +174,10 @@ void setup() {
   Serial.write(byte(0x85)); //decel limit
   Serial.write(byte(0x00)); //min
 
-  Wire.begin();
-  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
-  display.clearDisplay();
-  display.display();
+  //Wire.begin();
+  //display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
+  //display.clearDisplay();
+  //display.display();
 
   pinMode(Sport_Modus_PIN_Leuchte, OUTPUT);
   pinMode(Notbetrieb_PIN_Leuchte, OUTPUT);
@@ -204,19 +199,12 @@ void setup() {
   pinMode(Spule_Vorwaerts, OUTPUT);
   pinMode(Rueckwaerts_PIN_Leuchte, OUTPUT);
 
-
   Lampentest();
 
-  adc.init();
-  adc.setVoltageRange_mV(ADS1115_RANGE_6144);   //maximal 5000 mV
-  adc.setConvRate(ADS1115_860_SPS);
-  adc.setMeasureMode(ADS1115_SINGLE);
-
   Bremse_Auslesen();
-  AnalogSensor_Fehler();
   Gaspedal_check();
   Temperatur_start();
-  OLED_Display();
+ // OLED_Display();
   Initialwerte_schreiben();
 }
 
@@ -230,7 +218,7 @@ void loop() {
   if (!Gaspedal_angeschlossen || AnalogSensorFehler) {    //hier muss der Motor stehen bleiben, da das Gaspedal oder Sensor Fehler melden
     State = 0;
   }
-  else if (!Notbetrieb && !Freigabe){
+  else if (!Notbetrieb && !Freigabe) {
     State = 0;
   }
   else if (Notbetrieb && !AnalogSensorFehler && Gaspedal_angeschlossen) {  //Gaspedal und Analogsensor ok, Notbetrieb eingeschaltet

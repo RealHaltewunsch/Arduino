@@ -1,5 +1,5 @@
 //http://oleddisplay.squix.ch/#/home
-
+/*
 void OLED_Display() {
   display.clearDisplay();
   display.setTextColor(WHITE);
@@ -34,9 +34,5 @@ void OLED_Display() {
   display.print("  ");
   display.print("ASensFehl: ");
   display.print(AnalogSensorFehler);
-
-
-
-
-
 }
+*/

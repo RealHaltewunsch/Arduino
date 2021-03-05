@@ -10,12 +10,6 @@ void  Zyklische_Aufrufe() {
     Schalter();
   }
 
-
-  if (currentMillis - previousMillis_Analog_Fehler >= interval_Analog_Fehler) {
-    previousMillis_Analog_Fehler = currentMillis;
-    AnalogSensor_Fehler();
-  }
-
   if (Neutral && currentMillis - previousMillis_Rueckwaerts >= interval_Rueckwaerts) {
     previousMillis_Rueckwaerts = currentMillis;
     Rueckwaerts_LED = !Rueckwaerts_LED;

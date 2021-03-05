@@ -1,5 +1,5 @@
 void Freigabe_Check() {
-  if (!Uebertemperatur && !Untertemperatur && !AnalogSensorFehler && !Temperatursensor_Fehler && Gaspedal_angeschlossen && Leistungselektronik) {
+  if (!Uebertemperatur && !Untertemperatur && !Temperatursensor_Fehler && Gaspedal_angeschlossen && Leistungselektronik) {
     Freigabe = true;
   }
   else {
