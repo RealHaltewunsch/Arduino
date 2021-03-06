@@ -25,6 +25,9 @@
 //#define OLED_ADDR   0x3C
 //Adafruit_SSD1306 display(-1);
 
+//Reserve 40 grün-braun
+//Reserve 41 grau-pink
+
 //###Pin Zuweisungen
 //Verfügbar: 2
 #define Notbetrieb_PIN 28        //Schalter Notbetrieb
