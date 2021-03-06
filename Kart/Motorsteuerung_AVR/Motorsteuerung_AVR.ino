@@ -88,7 +88,6 @@ bool Gang_wechseln_delay = false; //erzeugt einen kleinen Delay bevor der Gang g
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
 bool Temperatursensor_Fehler = true;
-bool AnalogSensorFehler = false;
 bool Freigabe = false;
 bool Temperatur_LED_Zustand = false;
 bool Temperatursensor_Fehler_LED_Zustand = false;
@@ -215,13 +214,13 @@ void loop() {
 
   int State_alt = State;
 
-  if (!Gaspedal_angeschlossen || AnalogSensorFehler) {    //hier muss der Motor stehen bleiben, da das Gaspedal oder Sensor Fehler melden
+  if (!Gaspedal_angeschlossen) {    //hier muss der Motor stehen bleiben, da das Gaspedal oder Sensor Fehler melden
     State = 0;
   }
   else if (!Notbetrieb && !Freigabe) {
     State = 0;
   }
-  else if (Notbetrieb && !AnalogSensorFehler && Gaspedal_angeschlossen) {  //Gaspedal und Analogsensor ok, Notbetrieb eingeschaltet
+  else if (Notbetrieb && Gaspedal_angeschlossen) {  //Gaspedal, Notbetrieb eingeschaltet
     State = 1;
   }
   else if (Freigabe) {
