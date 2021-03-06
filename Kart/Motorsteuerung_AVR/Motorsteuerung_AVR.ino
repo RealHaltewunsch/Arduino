@@ -43,9 +43,9 @@
 #define Gaspedal_check_PIN 19
 #define Leistungselektronik_PIN 40 //an Lila anschließen
 #define TestLED_PIN 13
-#define Rueckwaerts_PIN 18    //an die alte Zündung anschließen, gelb
-#define Rueckwaerts_PIN_Leuchte 47   //an die alte Lampe Zündung anschließen...........................................
-#define Spule_Rueckwaerts 43  //noch nicht fest
+#define Rueckwaerts_PIN 18    
+#define Rueckwaerts_PIN_Leuchte 47  
+#define Spule_Rueckwaerts 40  //noch nicht fest
 #define Spule_Vorwaerts 42     //noch nicht fest
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
@@ -58,15 +58,15 @@
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 300 //Ampere
 #define MAX_VALUE_CURRENT_LOW 80 //Ampere
-#define MAX_VALUE_CURRENT_NOTBETRIEB 20 //Ampere
-#define MAX_VALUE_CURRENT_RUECKWAERTS 10//Ampere
-#define Regen_on 60  //Ampere
+#define MAX_VALUE_CURRENT_NOTBETRIEB 60 //Ampere
+#define MAX_VALUE_CURRENT_RUECKWAERTS 20//Ampere
+#define Regen_on 90  //Ampere
 #define Regen_on_Sport 125  //Ampere
-#define Regen_off  20   //Mindestens 10A, da sonst der Motor nicht stoppt
+#define Regen_off  40   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 999;  //Maximalwert der vom Gaspedal erreicht werden kann
-int GASPEDAL_MIN = 100; //Offset Spannung Gaspedal in mV
+int GASPEDAL_MAX = 850;  //Maximalwert der vom Gaspedal erreicht werden kann
+int GASPEDAL_MIN = 300; //Offset Spannung Gaspedal in 1/1023
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -87,6 +87,7 @@ volatile bool Gaspedal_angeschlossen = false;
 volatile bool Rueckwaertsgang = false;
 volatile bool Gang_wechseln = false;
 volatile bool Neutral = true;
+volatile bool firstscan = true;
 bool Gang_wechseln_delay = false; //erzeugt einen kleinen Delay bevor der Gang gewechselt wird
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
@@ -196,17 +197,20 @@ void setup() {
   pinMode(Regenerativbremsen_PIN, INPUT_PULLUP);
   pinMode(Leistungselektronik_PIN, INPUT_PULLUP);   //wird vom Optokoppler auf Masse gezogen
   pinMode(Rueckwaerts_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, RISING);
-  pinMode(Spule_Rueckwaerts, OUTPUT);
-  pinMode(Spule_Vorwaerts, OUTPUT);
   pinMode(Rueckwaerts_PIN_Leuchte, OUTPUT);
+  pinMode(Spule_Rueckwaerts, OUTPUT);
+  digitalWrite(Spule_Rueckwaerts, LOW);
+  pinMode(Spule_Vorwaerts, OUTPUT);
+  digitalWrite(Spule_Vorwaerts, LOW);
+  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, RISING);
+  
 
   Lampentest();
 
   Bremse_Auslesen();
   Gaspedal_check();
   Temperatur_start();
- // OLED_Display();
+  // OLED_Display();
   Initialwerte_schreiben();
 }
 
@@ -217,7 +221,7 @@ void loop() {
 
   int State_alt = State;
 
-  if (!Gaspedal_angeschlossen) {    //hier muss der Motor stehen bleiben, da das Gaspedal oder Sensor Fehler melden
+  if (!Gaspedal_angeschlossen) {    //hier muss der Motor stehen bleiben, da das Gaspedal einen Fehler meldet
     State = 0;
   }
   else if (!Notbetrieb && !Freigabe) {
@@ -245,12 +249,10 @@ void loop() {
         Gang_wechseln = true;
         break;
       case 1:         // Notbetrieb && Sensoren ok
-        Gang_wechseln = true;
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
         break;
       case 2:       //Alles OK
-        Gang_wechseln = true;
         Serial.write(byte(0x8A));    //Direction
         Serial.write(byte(0x01));    // FORWARD
         break;
@@ -261,10 +263,11 @@ void loop() {
   if (State == 1 || State == 2) {
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
-  else {
+  //Dauerhafte Kommunikation unterbinden
+  /*else {
     Serial.write(byte(0x8A));    //Direction
     Serial.write(byte(0x00));    // STOP
     Serial.write(byte(0x80));    //Speed
     Serial.write(byte(0x00));    // STOP
-  }
+  }*/
 }

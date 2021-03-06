@@ -1,11 +1,13 @@
 void Rueckwaerts_auslesen() {
-  if (Strom_Rueckwaerts_hex != 0) {
+  if (!firstscan) {
     if (Bremse && State != 0) {    //wenn der PIN HIGH ist, dann qwchseln, sonst so weiter
       Rueckwaertsgang = !Rueckwaertsgang;
       Gang_wechseln = true;
       Neutral = false;
+      detachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN));
     }
   }
+  firstscan = false;
 }
 
 
@@ -34,4 +36,6 @@ void Gang_Wechsel() {
     Rueckwaertsgang = true; //so wird beim wieder einschalten wieder der Vorwärtsgang eingelegt
   }
   Gang_wechseln = false;
+  firstscan = true;
+  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, FALLING);
 }
