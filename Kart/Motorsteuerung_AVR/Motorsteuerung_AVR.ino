@@ -126,6 +126,7 @@ int Batteriespannung = 0;
 int Batteriespannung_hex = 0x00;
 
 int Leistung = 0;
+unsigned short int Rueckwaerts_Zaehler = 0;
 
 unsigned long int currentMillis = 0;
 const unsigned long int interval_Temperatur_LED = 300; //dreimal in der Sekunde blinken
@@ -146,13 +147,13 @@ const unsigned int interval_Schalter = 512;  //Wichtig für die Schalter
 unsigned long int previousMillis_Schalter = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Leistungselektronik = 3000;  //Wichtig für die Schalter
 unsigned long int previousMillis_Leistungselektronik = 0; //speichert den Zeitpunkt des letzten durchgehens
-const unsigned int interval_Rueckwaerts = 512;  //Wichtig für die LED Rückwärtsgang
-unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des letzten durchgehens
+const unsigned int interval_Rueckwaerts_LED_LED = 512;  //Wichtig für die LED Rückwärtsgang
+unsigned long int previousMillis_Rueckwaerts_LED = 0; //speichert den Zeitpunkt des letzten durchgehens
 const unsigned int interval_Inaktiv = 60000;  //Wichtig für das abschalten des großen Relais
 unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
 
-const unsigned int interval_Inaktiv = 60000;  //Wichtig für das abschalten des großen Relais
-unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
+const unsigned int interval_Rueckwaerts = 250;  //Der Rueckwärts Knopf muss 1 Sekunde bzw. 4 Durchgänge am Stück gedrückt bleiben  
+unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
 unsigned long int Interval_auslesen_verstrichen = 0;

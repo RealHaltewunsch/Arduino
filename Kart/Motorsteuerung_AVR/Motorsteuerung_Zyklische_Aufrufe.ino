@@ -10,11 +10,17 @@ void  Zyklische_Aufrufe() {
     Schalter();
   }
 
-  if (Neutral && currentMillis - previousMillis_Rueckwaerts >= interval_Rueckwaerts) {
-    previousMillis_Rueckwaerts = currentMillis;
+  if (Neutral && currentMillis - previousMillis_Rueckwaerts_LED >= interval_Rueckwaerts_LED_LED) {
+    previousMillis_Rueckwaerts_LED = currentMillis;
     Rueckwaerts_LED = !Rueckwaerts_LED;
     digitalWrite(Rueckwaerts_PIN_Leuchte, Rueckwaerts_LED);
   }
+
+  if (currentMillis - previousMillis_Rueckwaerts >= interval_Rueckwaerts) {
+    previousMillis_Rueckwaerts = currentMillis;
+    Rueckwaerts_auslesen();
+  }
+
 
   /*
     if (currentMillis - previousMillis_OLED >= interval_OLED) {
@@ -28,10 +34,10 @@ void  Zyklische_Aufrufe() {
     Neutral = true;
     Gang_wechseln = true;
     Inaktiv = true;
-}
-else {
-  Inaktiv = false;;
-}
+  }
+  else {
+    Inaktiv = false;;
+  }
 
   if (currentMillis - previousMillis_LED >= interval_LED) {
     previousMillis_LED = currentMillis;

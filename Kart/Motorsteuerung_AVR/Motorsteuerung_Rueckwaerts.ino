@@ -1,13 +1,17 @@
 void Rueckwaerts_auslesen() {
-  if (!firstscan) {
-    if (Bremse && State != 0) {    //wenn der PIN HIGH ist, dann wechseln, sonst so weiter
-      Rueckwaertsgang = !Rueckwaertsgang;
-      Gang_wechseln = true;
-      Neutral = false;
-      detachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN));
-    }
+  if (!digitalRead(Rueckwaerts_PIN) && Bremse && State != 0) {
+    Rueckwaerts_Zaehler++;
   }
-  firstscan = false;
+  else {
+    Rueckwaerts_Zaehler = 0;
+  }
+
+  if (Rueckwaerts_Zaehler == 4) {    //1 Sekunde am Stück der Knopf gedrückt ist in den Rückwärtsgang schalten
+    Rueckwaertsgang = !Rueckwaertsgang;
+    Gang_wechseln = true;
+    Neutral = false;
+    Rueckwaerts_Zaehler = 0;
+  }
 }
 
 
@@ -36,6 +40,4 @@ void Gang_Wechsel() {
     Rueckwaertsgang = true; //so wird beim wieder einschalten wieder der Vorwärtsgang eingelegt
   }
   Gang_wechseln = false;
-  firstscan = true;
-  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, FALLING);
 }
