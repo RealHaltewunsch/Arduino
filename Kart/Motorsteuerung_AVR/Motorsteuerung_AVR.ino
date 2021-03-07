@@ -25,7 +25,7 @@
 //#define OLED_ADDR   0x3C
 //Adafruit_SSD1306 display(-1);
 
-//Reserve 43 
+//Reserve 43
 //Reserve 41 grau-pink
 
 //###Pin Zuweisungen
@@ -43,8 +43,8 @@
 #define Gaspedal_check_PIN 19
 #define Leistungselektronik_PIN 40 //an Lila anschließen
 #define TestLED_PIN 13
-#define Rueckwaerts_PIN 18    
-#define Rueckwaerts_PIN_Leuchte 47  
+#define Rueckwaerts_PIN 18
+#define Rueckwaerts_PIN_Leuchte 47
 #define Spule_Rueckwaerts 40  //grün-weiß
 #define Spule_Vorwaerts 42     //grün-braun
 //##############################################################################
@@ -84,10 +84,9 @@ volatile bool Bremse = true;
 volatile bool Sport_Modus = false;
 volatile bool Notbetrieb = false;
 volatile bool Gaspedal_angeschlossen = false;
-volatile bool Rueckwaertsgang = false;
-volatile bool Gang_wechseln = false;
-volatile bool Neutral = true;
-volatile bool firstscan = true;
+bool Rueckwaertsgang = false;
+bool Gang_wechseln = false;
+bool Neutral = true;
 bool Gang_wechseln_delay = false; //erzeugt einen kleinen Delay bevor der Gang gewechselt wird
 bool Uebertemperatur = true;
 bool Untertemperatur = false;
@@ -152,6 +151,9 @@ unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des 
 const unsigned int interval_Inaktiv = 60000;  //Wichtig für das abschalten des großen Relais
 unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
 
+const unsigned int interval_Inaktiv = 60000;  //Wichtig für das abschalten des großen Relais
+unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
+
 const unsigned int Interval_auslesen = 256;
 unsigned long int Interval_auslesen_verstrichen = 0;
 const unsigned int Interval_Temperatur = 2500;
@@ -202,8 +204,7 @@ void setup() {
   digitalWrite(Spule_Rueckwaerts, LOW);
   pinMode(Spule_Vorwaerts, OUTPUT);
   digitalWrite(Spule_Vorwaerts, LOW);
-  attachInterrupt(digitalPinToInterrupt(Rueckwaerts_PIN), Rueckwaerts_auslesen, RISING);
-  
+
 
   Lampentest();
 
@@ -269,5 +270,5 @@ void loop() {
     Serial.write(byte(0x00));    // STOP
     Serial.write(byte(0x80));    //Speed
     Serial.write(byte(0x00));    // STOP
-  }*/
+    }*/
 }
