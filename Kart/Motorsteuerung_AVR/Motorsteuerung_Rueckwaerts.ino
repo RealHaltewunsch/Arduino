@@ -6,7 +6,7 @@ void Rueckwaerts_auslesen() {
     Rueckwaerts_Zaehler = 0;
   }
 
-  if (Rueckwaerts_Zaehler == 4) {    //1 Sekunde am Stück der Knopf gedrückt ist in den Rückwärtsgang schalten
+  if (Rueckwaerts_Zaehler == 8) {    //1 Sekunde am Stück der Knopf gedrückt ist in den Rückwärtsgang schalten
     Rueckwaertsgang = !Rueckwaertsgang;
     Gang_wechseln = true;
     Neutral = false;

@@ -152,7 +152,7 @@ unsigned long int previousMillis_Rueckwaerts_LED = 0; //speichert den Zeitpunkt 
 const unsigned int interval_Inaktiv = 60000;  //Wichtig für das abschalten des großen Relais
 unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
 
-const unsigned int interval_Rueckwaerts = 250;  //Der Rueckwärts Knopf muss 1 Sekunde bzw. 4 Durchgänge am Stück gedrückt bleiben  
+const unsigned int interval_Rueckwaerts = 125;  //Der Rueckwärts Knopf muss 1 Sekunde bzw. 4 Durchgänge am Stück gedrückt bleiben  
 unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
