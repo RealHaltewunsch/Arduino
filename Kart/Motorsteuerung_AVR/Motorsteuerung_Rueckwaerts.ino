@@ -1,6 +1,6 @@
 void Rueckwaerts_auslesen() {
   if (!firstscan) {
-    if (Bremse && State != 0) {    //wenn der PIN HIGH ist, dann qwchseln, sonst so weiter
+    if (Bremse && State != 0) {    //wenn der PIN HIGH ist, dann wechseln, sonst so weiter
       Rueckwaertsgang = !Rueckwaertsgang;
       Gang_wechseln = true;
       Neutral = false;

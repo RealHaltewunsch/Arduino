@@ -25,7 +25,7 @@
 //#define OLED_ADDR   0x3C
 //Adafruit_SSD1306 display(-1);
 
-//Reserve 40 grün-braun
+//Reserve 43 
 //Reserve 41 grau-pink
 
 //###Pin Zuweisungen
@@ -45,8 +45,8 @@
 #define TestLED_PIN 13
 #define Rueckwaerts_PIN 18    
 #define Rueckwaerts_PIN_Leuchte 47  
-#define Spule_Rueckwaerts 40  //noch nicht fest
-#define Spule_Vorwaerts 42     //noch nicht fest
+#define Spule_Rueckwaerts 40  //grün-weiß
+#define Spule_Vorwaerts 42     //grün-braun
 //##############################################################################
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
