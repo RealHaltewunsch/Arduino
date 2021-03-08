@@ -58,11 +58,11 @@
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 300 //Ampere
 #define MAX_VALUE_CURRENT_LOW 80 //Ampere
-#define MAX_VALUE_CURRENT_NOTBETRIEB 60 //Ampere
+#define MAX_VALUE_CURRENT_NOTBETRIEB 125 //Ampere
 #define MAX_VALUE_CURRENT_RUECKWAERTS 30//Ampere
-#define Regen_on 90  //Ampere
+#define Regen_on 125  //Ampere
 #define Regen_on_Sport 125  //Ampere
-#define Regen_off  40   //Mindestens 10A, da sonst der Motor nicht stoppt
+#define Regen_off  69   //Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
 int GASPEDAL_MAX = 850;  //Maximalwert der vom Gaspedal erreicht werden kann

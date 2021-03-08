@@ -1,4 +1,4 @@
 void Bremse_Auslesen () {
-  Bremse = digitalRead(Bremse_PIN);
+  Bremse = !digitalRead(Bremse_PIN);
   return;
 }
