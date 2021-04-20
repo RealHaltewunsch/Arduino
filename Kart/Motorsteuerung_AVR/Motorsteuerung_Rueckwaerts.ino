@@ -15,6 +15,7 @@ void Rueckwaerts_auslesen() {
     Rueckwaertsgang = !Rueckwaertsgang;
     Gang_wechseln = true;
     Neutral = true;
+    Rueckwaertsgang = true;
   }
 }
 
@@ -24,13 +25,13 @@ void Gang_Wechsel() {
     digitalWrite(Rueckwaerts_PIN_Leuchte, Rueckwaertsgang);   //Lampe Leuchtet, wenn Rückwärtsgang eingelegt ist
     if (Rueckwaertsgang) {
       digitalWrite(Spule_Vorwaerts, LOW);
-      SEND(CURR,Strom_Rueckwaerts);
+      SEND(CURR, Strom_Rueckwaerts);
       delay (250);
       digitalWrite(Spule_Rueckwaerts, HIGH);
     }
     else {
       digitalWrite(Spule_Rueckwaerts, LOW);
-      SEND(CURR,Strom);
+      SEND(CURR, Strom);
       delay (250);
       digitalWrite(Spule_Vorwaerts, HIGH);
     }
