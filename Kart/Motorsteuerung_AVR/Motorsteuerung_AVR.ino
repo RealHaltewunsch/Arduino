@@ -96,9 +96,9 @@
 #define MAX_VALUE_CURRENT_LOW 80 //Ampere
 #define MAX_VALUE_CURRENT_NOTBETRIEB 300 //Ampere
 #define MAX_VALUE_CURRENT_RUECKWAERTS 40//Ampere
-#define Regen_on 125  //Ampere
+#define Regen_on 80  //Ampere
 #define Regen_on_Sport 125  //Ampere
-#define Regen_off  70//Mindestens 10A, da sonst der Motor nicht stoppt
+#define Regen_off  50//Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
 #define GASPEDAL_MAX 800  //Maximalwert der vom Gaspedal erreicht werden kann
