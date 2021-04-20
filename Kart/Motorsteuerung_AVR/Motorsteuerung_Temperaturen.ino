@@ -84,7 +84,7 @@ void Temperatur_check() {
 
 void Temperatur_start () {
   flushReceive();
-  SEND(206, 207);
+  SEND(HEATSINKTEMP, MAINBOARDTEMP);
   byte TEMP[2];
   sensors.setResolution(Temperatursensor_Akku_1, 9);
   sensors.setResolution(Temperatursensor_Akku_2, 9);
@@ -117,10 +117,11 @@ void Temperatur_start () {
   Temperatur_Akku_Max = max (Temperatur_Akku_Max, Temperatur_Akku_4);
   Temperatur_Akku_Max = max (Temperatur_Akku_Max, Temperatur_Akku_5);
   Temperatur_check();
-  Serial.println(Temperatur_Akku_1);
+  /*Serial.println(Temperatur_Akku_1);
   Serial.println(Temperatur_Akku_2);
   Serial.println(Temperatur_Akku_3);
   Serial.println(Temperatur_Akku_4);
   Serial.println(Temperatur_Akku_5);
   Serial.println(Temperatur_Leistungselektronik);
+  */
 }

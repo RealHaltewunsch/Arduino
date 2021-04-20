@@ -90,6 +90,9 @@
 #define DIR 138//Direction
 #define VOLT 204 //Versorgungspannung lesen
 #define UART 224 //UART Mode
+#define HEATSINKTEMP 206 //UART Mode
+#define MAINBOARDTEMP 207 //UART Mode
+
 //##############################################################################
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 300 //Ampere
