@@ -15,7 +15,7 @@
 #include <stdlib.h>
 //#include<Wire.h>
 #include <Adafruit_GFX.h>
-#include <Fonts/myownfont.h>
+//#include <Fonts/myownfont.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
