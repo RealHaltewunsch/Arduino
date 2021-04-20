@@ -60,7 +60,6 @@ void  Zyklische_Aufrufe() {
     Neutral = true;
     Gang_wechseln = true;
     Inaktiv = true;
-    Rueckwaertsgang = true;
   }
   else {
     Inaktiv = false;
