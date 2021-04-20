@@ -1,16 +1,16 @@
 void  Gaspedal () {
   Sollwert_analog = Smooth_analog(A0, 5);
   Sollwert_analog = constrain (Sollwert_analog , 0, GASPEDAL_MAX);
+  Geschwindigkeit_schreiben(Sollwert_analog, Gang_wechseln, Bremse);
 
-  if (Sport_Modus) {
-    Beschleunigung_schreiben(Sollwert_analog, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Acc_Delay_Sport, Max_Acc_Delay_Sport);
-    Verzoegerung_schreiben(Sollwert_analog, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Decc_Delay_Sport, Max_Decc_Delay_Sport,  Bremse);
+   if (Sport_Modus) {
+    Beschleunigung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Acc_Delay_Sport, Max_Acc_Delay_Sport);
+    Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Decc_Delay_Sport, Max_Decc_Delay_Sport,  Bremse);
   }
   else {
-    Beschleunigung_schreiben(Sollwert_analog, 0, Grenze_Gaspedal_empfindlich, Min_Acc_Delay, Max_Acc_Delay);
-    Verzoegerung_schreiben(Sollwert_analog, 0, Grenze_Gaspedal_empfindlich, Min_Decc_Delay, Max_Decc_Delay,  Bremse);
+    Beschleunigung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Acc_Delay, Max_Acc_Delay);
+    Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Decc_Delay, Max_Decc_Delay,  Bremse);
   }
-  Geschwindigkeit_schreiben(Sollwert_analog, Gang_wechseln, Bremse);
 
 }
 
@@ -46,7 +46,7 @@ void Beschleunigung_schreiben (unsigned short int Pedal, unsigned short int Gren
 
 void Verzoegerung_schreiben (unsigned short int Pedal, unsigned short int Grenze_unten, unsigned short int Grenze_oben, unsigned short int Min_delay, unsigned short int Max_delay , bool Bremse_read) {
   unsigned short int Verzoegerungslimit_alt = Verzoegerungslimit;
-  if (Bremse_read || Pedal < GASPEDAL_MIN) {
+  if (Bremse_read) {
     Verzoegerungslimit = 0;
   }
   else if (Pedal >= Grenze_unten && Pedal <= Grenze_oben) {
@@ -54,9 +54,6 @@ void Verzoegerung_schreiben (unsigned short int Pedal, unsigned short int Grenze
   }
   else if (Pedal > Grenze_oben) {
     Verzoegerungslimit = Min_delay;
-  }
-  else {
-    Verzoegerungslimit = 0;
   }
   if (Verzoegerungslimit_alt != Verzoegerungslimit) {
     SEND(DECC, Verzoegerungslimit);

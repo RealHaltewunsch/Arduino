@@ -15,7 +15,6 @@ void Rueckwaerts_auslesen() {
     Rueckwaertsgang = !Rueckwaertsgang;
     Gang_wechseln = true;
     Neutral = true;
-    Rueckwaertsgang = true;
   }
 }
 

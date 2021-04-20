@@ -61,11 +61,11 @@
 #define MAX_TEMP_LEISTUNGSELEKTRONIK 60
 #define MIN_TEMP_AKKU 5
 //##############################################################################
-#define GRENZE_GASPEDAL_EMPFINDLICH 30  //0-100%
-#define GRENZE_GASPEDAL_EMPFINDLICH_SPORT 10 //0-100%
+#define GRENZE_GASPEDAL_EMPFINDLICH 40  //0-100%
+#define GRENZE_GASPEDAL_EMPFINDLICH_SPORT 20 //0-100%
 
-#define MAX_ACC_DELAY 20//0-100%
-#define MIN_ACC_DELAY 2  //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
+#define MAX_ACC_DELAY 10//0-100%
+#define MIN_ACC_DELAY 0  //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
 #define MAX_ACC_DELAY_SPORT 5 //0-100%
 #define MIN_ACC_DELAY_SPORT 0 //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
@@ -73,7 +73,7 @@
 #define MAX_DECC_DELAY 10 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_DECC_DELAY_SPORT 2//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MAX_DECC_DELAY_SPORT 5//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY_SPORT 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
 #define SPEED 128 //Speed
