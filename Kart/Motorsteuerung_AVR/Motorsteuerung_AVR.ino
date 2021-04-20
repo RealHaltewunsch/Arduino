@@ -15,7 +15,7 @@
 #include <stdlib.h>
 //#include<Wire.h>
 #include <Adafruit_GFX.h>
-#include <Fonts/myownfont.h>
+//#include <Fonts/myownfont.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
@@ -156,13 +156,18 @@ unsigned short int Temperaturzaehler = 0;
 unsigned short int Sollwert_analog = 0;
 unsigned short int Sollwert = 0;
 
-int Grenze_Gaspedal_empfindlich = 0;
+int Grenze_Gaspedal_empfindlich = 0;        //Bis zu diesem Pedalwert wird das Gas sachte angenommen, wird in Initialwerte_schreiben berechnet
+int Grenze_Gaspedal_empfindlich_Sport = 0;  //Bis zu diesem Pedalwert wird das Gas sachte angenommen, wird in Initialwerte_schreiben berechnet
 
 int Max_Acc_Delay = 0;
 int Min_Acc_Delay = 0;
 int Max_Decc_Delay = 0;
 int Min_Decc_Delay = 0;
 
+int Max_Acc_Delay_Sport = 0;
+int Min_Acc_Delay_Sport = 0;
+int Max_Decc_Delay_Sport = 0;
+int Min_Decc_Delay_Sport = 0;
 
 int Beschleunigungslimit = 0;
 int Beschleunigungslimit_alt = 0;
@@ -227,13 +232,10 @@ Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 
 void setup() {
-  Serial.begin(9600);  //Kommunikation mit Leistungselektronik
-  Serial.setTimeout(250);
+  Initialwerte_schreiben();
   SEND(UART, 0);
   SEND(DIR, STOP);
   SEND(SPEED, STOP);
-  SEND(ACC, 0);
-  SEND(DECC, 0);
   //pixels.begin();
   //pixels.clear();
   //pixels.show();   // Send the updated pixel colors to the hardware.
@@ -270,7 +272,7 @@ void setup() {
   Gaspedal_check();
   Temperatur_start();
   // OLED_Display();
-  Initialwerte_schreiben();
+
 }
 
 void loop() {
