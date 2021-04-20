@@ -1,20 +1,19 @@
 void Regenerativbremsen_auslesen () {
-  int Strom_regen_hex_alt = Strom_regen_hex;
+  int Strom_regen_alt = Strom_regen;
   Regenerativbremsen = !digitalRead(Regenerativbremsen_PIN);
   digitalWrite(Regenerativbremsen_PIN_Leuchte, Regenerativbremsen);
   if (Regenerativbremsen && Sport_Modus) {
-    Strom_regen_hex = map(Regen_on_Sport, 0, 434, 0x00, 0x7F);
+    Strom_regen = map(Regen_on_Sport, 0, 434, 0, 127);
   }
   else if (Regenerativbremsen && !Sport_Modus) {
-    Strom_regen_hex = map(Regen_on, 0, 434, 0x00, 0x7F);
+    Strom_regen = map(Regen_on, 0, 434, 0, 127);
 
   }
   else {
-    Strom_regen_hex = map(Regen_off, 0, 434, 0x00, 0x7F);
+    Strom_regen = map(Regen_off, 0, 434, 0, 127);
   }
 
-  if (Strom_regen_hex_alt != Strom_regen_hex) {
-    Serial.write(byte(0x83));   //Regen Current Limit
-    Serial.write(byte(Strom_regen_hex));
+  if (Strom_regen_alt != Strom_regen) {
+    SEND(REGEN, Strom_regen);
   }
 }

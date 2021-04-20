@@ -16,6 +16,10 @@
 //#include<Wire.h>
 #include <Adafruit_GFX.h>
 #include <Fonts/myownfont.h>
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+#include <avr/power.h> // Required for 16 MHz Adafruit Trinket
+#endif
 //#include <Adafruit_SSD1306.h>
 
 //##############################################################################
@@ -30,6 +34,8 @@
 
 //###Pin Zuweisungen
 //Verfügbar: 2
+#define NUMPIXELS 8
+#define NEOPIXEL_PIN    2 //weiße Leitung
 #define Notbetrieb_PIN 28        //Schalter Notbetrieb
 #define Bremse_PIN 3
 #define Sportmodus_PIN 22
@@ -51,40 +57,71 @@
 //###Maximal- und Minimalwerte für Temperaturen, nicht verändern
 #define MAX_TEMP_AKKU_STARTUP 45
 #define MAX_TEMP_AKKU_RUN 50
-#define MAX_TEMP_MOTOR 110
+#define MAX_TEMP_MOTOR 70
 #define MAX_TEMP_LEISTUNGSELEKTRONIK 60
 #define MIN_TEMP_AKKU 5
+//##############################################################################
+#define GRENZE_GASPEDAL_EMPFINDLICH 30  //0-100%
+#define GRENZE_GASPEDAL_EMPFINDLICH_SPORT 10 //0-100%
+
+#define MAX_ACC_DELAY 20//0-100%
+#define MIN_ACC_DELAY 2  //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
+
+#define MAX_ACC_DELAY_SPORT 5 //0-100%
+#define MIN_ACC_DELAY_SPORT 0 //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
+
+#define MAX_DECC_DELAY 10 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MIN_DECC_DELAY 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
+
+#define MAX_DECC_DELAY_SPORT 2//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MIN_DECC_DELAY_SPORT 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
+
+#define SPEED 128 //Speed
+#define STOP 0 //STOPP
+#define FWD 1 //Vorwärts
+#define CURR 130
+#define REGEN 131 //Regen Limit
+#define ACC 132 //Acceleration limit
+#define DECC 133 //Decceleration limit
+#define OFF_LOW 134
+#define ON_LOW 135
+#define OFF_HIGH 136
+#define ON_HIGH 137
+#define DIR 138//Direction
+#define VOLT 204 //Versorgungspannung lesen
+#define UART 224 //UART Mode
 //##############################################################################
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 300 //Ampere
 #define MAX_VALUE_CURRENT_LOW 80 //Ampere
-#define MAX_VALUE_CURRENT_NOTBETRIEB 125 //Ampere
-#define MAX_VALUE_CURRENT_RUECKWAERTS 30//Ampere
+#define MAX_VALUE_CURRENT_NOTBETRIEB 300 //Ampere
+#define MAX_VALUE_CURRENT_RUECKWAERTS 40//Ampere
 #define Regen_on 125  //Ampere
 #define Regen_on_Sport 125  //Ampere
-#define Regen_off  69   //Mindestens 10A, da sonst der Motor nicht stoppt
+#define Regen_off  70//Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-int GASPEDAL_MAX = 850;  //Maximalwert der vom Gaspedal erreicht werden kann
-int GASPEDAL_MIN = 300; //Offset Spannung Gaspedal in 1/1023
+#define GASPEDAL_MAX 800  //Maximalwert der vom Gaspedal erreicht werden kann
+#define GASPEDAL_MIN 230 //Offset Spannung Gaspedal in 1/1023
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
-uint8_t Temperatursensor_Akku_1[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akku_2[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akku_3[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akku_4[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akku_5[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Akku_6[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t Temperatursensor_Akku_1[8] = {0x28, 0xE2, 0x7B, 0x79, 0xA2, 0x00, 0x03, 0x24};
+uint8_t Temperatursensor_Akku_2[8] = {0x28, 0x8A, 0x63, 0x79, 0xA2, 0x00, 0x03, 0x04};
+uint8_t Temperatursensor_Akku_3[8] = {0x28, 0x8E, 0x62, 0x79, 0xA2, 0x00, 0x03, 0x15};
+uint8_t Temperatursensor_Akku_4[8] = {0x28, 0xA9, 0xE9, 0x79, 0xA2, 0x00, 0x03, 0x9D};
+uint8_t Temperatursensor_Akku_5[8] = {0x28, 0x45, 0xB5, 0x79, 0xA2, 0x00, 0x03, 0x7D};
+uint8_t Temperatursensor_Motor[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 uint8_t Temperatursensor_Leistungselektronik [8] = { 0x28, 0xCE, 0x06, 0x45, 0x92, 0x16, 0x02, 0xF2 };
 //##############################################################################
 //###Auflistung und Zuweisung der Zustände
-//volatile bool Stromregelung = false;
 volatile bool Bremse = true;
-volatile bool Sport_Modus = false;
-volatile bool Notbetrieb = false;
 volatile bool Gaspedal_angeschlossen = false;
+bool Sport_Modus = false;
+bool Sportmodus_state_alt = true;
+bool Notbetrieb = false;
+bool Notbetrieb_alt = true;
 bool Rueckwaertsgang = false;
+bool Rueckwaertsgang_alt = false;
 bool Gang_wechseln = false;
 bool Neutral = true;
 bool Gang_wechseln_delay = false; //erzeugt einen kleinen Delay bevor der Gang gewechselt wird
@@ -110,20 +147,35 @@ int Temperatur_Akku_5 = 0;
 int Temperatur_Akku_6 = 0;
 int Temperatur_Akku_Max = 0;
 int Temperatur_Akku_Min = 0;
-int Temperatur_Motor = 0;
+int Temperatur_Motor = 20;
 int Temperatur_Leistungselektronik = 0;
-int Temperaturzaehler = 0;
+int Temperatur_Leistungselektronik_Max = 0;
+int Temperatur_Leistungselektronik_Min = 0;
+unsigned short int Temperaturzaehler = 0;
 
-int Sollwert_analog = 0;
-int Sollwert_hex = 0x00;
+unsigned short int Sollwert_analog = 0;
+unsigned short int Sollwert = 0;
+
+int Grenze_Gaspedal_empfindlich = 0;
+
+int Max_Acc_Delay = 0;
+int Min_Acc_Delay = 0;
+int Max_Decc_Delay = 0;
+int Min_Decc_Delay = 0;
+
+
+int Beschleunigungslimit = 0;
+int Beschleunigungslimit_alt = 0;
+int Verzoegerungslimit = 0;
+int Sollwert_acc = 0;
+int Verzoegerungslimit_alt = 0;
 
 int Strom = 0;
-int Strom_hex = 0x00;
-int Strom_regen_hex = 0x00;
-int Strom_Rueckwaerts_hex = 0x00;
+int Strom_regen = 0;
+int Strom_Rueckwaerts = 0;
 
 int Batteriespannung = 0;
-int Batteriespannung_hex = 0x00;
+int SOC = 0;
 
 int Leistung = 0;
 unsigned short int Rueckwaerts_Zaehler = 0;
@@ -152,7 +204,7 @@ unsigned long int previousMillis_Rueckwaerts_LED = 0; //speichert den Zeitpunkt 
 const unsigned int interval_Inaktiv = 60000;  //Wichtig für das abschalten des großen Relais
 unsigned long int previousMillis_Inaktiv = 0; //speichert den Zeitpunkt des letzten durchgehens
 
-const unsigned int interval_Rueckwaerts = 125;  //Der Rueckwärts Knopf muss 1 Sekunde bzw. 4 Durchgänge am Stück gedrückt bleiben  
+const unsigned int interval_Rueckwaerts = 100;  //Der Rueckwärts Knopf muss 1 Sekunde bzw. 4 Durchgänge am Stück gedrückt bleiben
 unsigned long int previousMillis_Rueckwaerts = 0; //speichert den Zeitpunkt des letzten durchgehens
 
 const unsigned int Interval_auslesen = 256;
@@ -163,27 +215,33 @@ unsigned long int measureTime = 0;
 
 
 int State = 0; //0 = Stopp, 1 = Notbetrieb&&Zündung, 2 = OK,  3 = OK, Bremse aktiv
+
+
 // Setup a oneWire instance to communicate with any OneWire devices
 // (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
+Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+
 
 
 void setup() {
   Serial.begin(9600);  //Kommunikation mit Leistungselektronik
-  Serial.write(byte(0xE0));   //UART Mode, wenn 3 Sekunden kein Update erfolgt, Shutdown!
-  Serial.write(byte(0x8A));    //Direction
-  Serial.write(byte(0x00));    // STOP
-  Serial.write(byte(0x84)); //accel limit
-  Serial.write(byte(0x00)); //min
-  Serial.write(byte(0x85)); //decel limit
-  Serial.write(byte(0x00)); //min
-
+  Serial.setTimeout(250);
+  SEND(UART, 0);
+  SEND(DIR, STOP);
+  SEND(SPEED, STOP);
+  SEND(ACC, 0);
+  SEND(DECC, 0);
+  //pixels.begin();
+  //pixels.clear();
+  //pixels.show();   // Send the updated pixel colors to the hardware.
   //Wire.begin();
   //display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
   //display.clearDisplay();
   //display.display();
+
 
   pinMode(Sport_Modus_PIN_Leuchte, OUTPUT);
   pinMode(Notbetrieb_PIN_Leuchte, OUTPUT);
@@ -205,7 +263,6 @@ void setup() {
   digitalWrite(Spule_Rueckwaerts, LOW);
   pinMode(Spule_Vorwaerts, OUTPUT);
   digitalWrite(Spule_Vorwaerts, LOW);
-
 
   Lampentest();
 
@@ -243,20 +300,16 @@ void loop() {
   if (State_alt != State) {
     switch (State) {  // 1 = Notbetrieb&&keine kritischen Fehler , 2 = OK
       case 0:             //0 = Stopp oder kritischer Fehler
-        Serial.write(byte(0x8A));    //Direction
-        Serial.write(byte(0x00));    // STOP
-        Serial.write(byte(0x80));    //Speed
-        Serial.write(byte(0x00));    // STOP
+        SEND(DIR, STOP);
+        SEND(SPEED, STOP);
         Neutral = true;
         Gang_wechseln = true;
         break;
       case 1:         // Notbetrieb && Sensoren ok
-        Serial.write(byte(0x8A));    //Direction
-        Serial.write(byte(0x01));    // FORWARD
+        SEND(DIR, FWD);
         break;
       case 2:       //Alles OK
-        Serial.write(byte(0x8A));    //Direction
-        Serial.write(byte(0x01));    // FORWARD
+        SEND(DIR, FWD);
         break;
       default: State = 0;
         break;
@@ -265,11 +318,4 @@ void loop() {
   if (State == 1 || State == 2) {
     Gaspedal(); //Verändert Sollwert abhängig vom Pedal
   }
-  //Dauerhafte Kommunikation unterbinden
-  /*else {
-    Serial.write(byte(0x8A));    //Direction
-    Serial.write(byte(0x00));    // STOP
-    Serial.write(byte(0x80));    //Speed
-    Serial.write(byte(0x00));    // STOP
-    }*/
 }

@@ -1,28 +1,50 @@
 void Sport_Modus_auslesen() {
-  int Strom_hex_alt = Strom_hex;
-  if (!Rueckwaertsgang) {
-    bool Sportmodus_state = digitalRead(Sportmodus_PIN);
-    if (Notbetrieb && !Sportmodus_state) { //Wenn PIN HIGH dann kein Sport Modus
-      Sport_Modus = true;
-      Strom_hex = map(MAX_VALUE_CURRENT_SPORT, 0, 434, 0x00, 0x7F);
-    }
-    else if (Notbetrieb && Sportmodus_state) {
-      Sport_Modus = false;
-      Strom_hex = map(MAX_VALUE_CURRENT_LOW, 0, 434, 0x00, 0x7F);   //Sportmodus deaktiviert, Notbetrieb aus
+  int Strom_alt = Strom;
+  bool Sportmodus_state = digitalRead(Sportmodus_PIN);
+
+  if (Notbetrieb_alt != Notbetrieb || Rueckwaertsgang_alt != Rueckwaertsgang || Sportmodus_state_alt != Sportmodus_state) {
+    if (!Rueckwaertsgang) {
+      if (Notbetrieb && !Sportmodus_state) { //Wenn PIN HIGH dann kein Sport Modus
+        Sport_Modus = true;
+        Strom = map(MAX_VALUE_CURRENT_SPORT, 0, 434, 0, 127);
+        Grenze_Gaspedal_empfindlich = map(GRENZE_GASPEDAL_EMPFINDLICH_SPORT, 0, 100, 0, 127);
+        Max_Acc_Delay = map(MAX_ACC_DELAY_SPORT, 0, 100, 0, 127);
+        Min_Acc_Delay = map(MIN_ACC_DELAY_SPORT, 0, 100, 0, 127);
+        Max_Decc_Delay = map(MAX_DECC_DELAY, 0, 100, 0, 127);
+        Min_Decc_Delay = map(MIN_DECC_DELAY, 0, 100, 0, 127);
+      }
+      else if (Notbetrieb && Sportmodus_state) {
+        Sport_Modus = false;
+        Strom = map(MAX_VALUE_CURRENT_LOW, 0, 434, 0, 127);   //Sportmodus deaktiviert, Notbetrieb aus
+        Grenze_Gaspedal_empfindlich = map(GRENZE_GASPEDAL_EMPFINDLICH, 0, 100, 0, 127);
+        Max_Acc_Delay = map(MAX_ACC_DELAY, 0, 100, 0, 127);
+        Min_Acc_Delay = map(MIN_ACC_DELAY, 0, 100, 0, 127);
+        Max_Decc_Delay = map(MAX_DECC_DELAY, 0, 100, 0, 127);
+        Min_Decc_Delay = map(MIN_DECC_DELAY, 0, 100, 0, 127);
+      }
+      else {
+        Sport_Modus = false;  //Sportmodus wird false, weil Notbetrieb aktiviert ist, anderen beiden Bedingungen treffen nicht zu, Frequenz wird von der ISR Notbetrieb_auslesen verändert
+        Strom = map(MAX_VALUE_CURRENT_NOTBETRIEB, 0, 434, 0, 127);
+        Grenze_Gaspedal_empfindlich = map(GRENZE_GASPEDAL_EMPFINDLICH, 0, 100, 0, 127);
+        Max_Acc_Delay = map(MAX_ACC_DELAY, 0, 100, 0, 127);
+        Min_Acc_Delay = map(MIN_ACC_DELAY, 0, 100, 0, 127);
+        Max_Decc_Delay = map(MAX_DECC_DELAY, 0, 100, 0, 127);
+        Min_Decc_Delay = map(MIN_DECC_DELAY, 0, 100, 0, 127);
+      }
     }
     else {
-      Sport_Modus = false;  //Sportmodus wird false, weil Notbetrieb aktiviert ist, anderen beiden Bedingungen treffen nicht zu, Frequenz wird von der ISR Notbetrieb_auslesen verändert
-      Strom_hex = map(MAX_VALUE_CURRENT_NOTBETRIEB, 0, 434, 0x00, 0x7F);
+      Sport_Modus = false;
+    }
+    digitalWrite(Sport_Modus_PIN_Leuchte, Sport_Modus);
+    if (Strom_alt != Strom && !Rueckwaertsgang) {
+      SEND(CURR, Strom);
     }
   }
-  else {
-    Sport_Modus = false;
-  }
-  digitalWrite(Sport_Modus_PIN_Leuchte, Sport_Modus);
-  if (Strom_hex_alt != Strom_hex && !Rueckwaertsgang) {
-    Serial.write(byte(0x82));   //Current Limit
-    Serial.write(byte(Strom_hex));
-  }
+
+  Notbetrieb_alt = Notbetrieb;
+  Rueckwaertsgang_alt = Rueckwaertsgang;
+  Sportmodus_state_alt = Sportmodus_state;
+
 }
 
 void Notbetrieb_auslesen () {

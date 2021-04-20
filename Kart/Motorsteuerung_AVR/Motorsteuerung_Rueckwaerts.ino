@@ -6,11 +6,15 @@ void Rueckwaerts_auslesen() {
     Rueckwaerts_Zaehler = 0;
   }
 
-  if (Rueckwaerts_Zaehler == 8) {    //1 Sekunde am Stück der Knopf gedrückt ist in den Rückwärtsgang schalten
+  if (Rueckwaerts_Zaehler == 8) {    //0,8 Sekunde am Stück der Knopf gedrückt ist in den Rückwärtsgang schalten
     Rueckwaertsgang = !Rueckwaertsgang;
     Gang_wechseln = true;
     Neutral = false;
-    Rueckwaerts_Zaehler = 0;
+  }
+  else if (Rueckwaerts_Zaehler == 20) {    //1,6 Sekunde am Stück der Knopf gedrückt ist in den Rückwärtsgang schalten
+    Rueckwaertsgang = !Rueckwaertsgang;
+    Gang_wechseln = true;
+    Neutral = true;
   }
 }
 
@@ -20,15 +24,13 @@ void Gang_Wechsel() {
     digitalWrite(Rueckwaerts_PIN_Leuchte, Rueckwaertsgang);   //Lampe Leuchtet, wenn Rückwärtsgang eingelegt ist
     if (Rueckwaertsgang) {
       digitalWrite(Spule_Vorwaerts, LOW);
-      Serial.write(byte(0x82));   //Current Limit
-      Serial.write(byte(Strom_Rueckwaerts_hex));
+      SEND(CURR,Strom_Rueckwaerts);
       delay (250);
       digitalWrite(Spule_Rueckwaerts, HIGH);
     }
     else {
       digitalWrite(Spule_Rueckwaerts, LOW);
-      Serial.write(byte(0x82));   //Current Limit
-      Serial.write(byte(Strom_hex));
+      SEND(CURR,Strom);
       delay (250);
       digitalWrite(Spule_Vorwaerts, HIGH);
     }

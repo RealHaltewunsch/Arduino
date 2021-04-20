@@ -11,8 +11,7 @@ void Schalter () {
       previousMillis_Inaktiv = currentMillis;
     }
     else {
-      Serial.write(byte(0x8A));    //Direction
-      Serial.write(byte(0x00));    // STOP
+      SEND(DIR,STOP);
       Gang_wechseln_delay = true;  //beim nächsten Durchlauf wird der Gang gewechselt
     }
   }
