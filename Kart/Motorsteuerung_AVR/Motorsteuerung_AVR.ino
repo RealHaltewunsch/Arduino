@@ -61,19 +61,19 @@
 #define MAX_TEMP_LEISTUNGSELEKTRONIK 60
 #define MIN_TEMP_AKKU 5
 //##############################################################################
-#define GRENZE_GASPEDAL_EMPFINDLICH 40  //0-100%
-#define GRENZE_GASPEDAL_EMPFINDLICH_SPORT 20 //0-100%
+#define GRENZE_GASPEDAL_EMPFINDLICH 50  //0-100%
+#define GRENZE_GASPEDAL_EMPFINDLICH_SPORT 50 //0-100%
 
-#define MAX_ACC_DELAY 10//0-100%
+#define MAX_ACC_DELAY 15//0-100%
 #define MIN_ACC_DELAY 0  //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
 #define MAX_ACC_DELAY_SPORT 5 //0-100%
 #define MIN_ACC_DELAY_SPORT 0 //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_DECC_DELAY 10 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MAX_DECC_DELAY 0 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_DECC_DELAY_SPORT 5//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MAX_DECC_DELAY_SPORT 0//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY_SPORT 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
 #define SPEED 128 //Speed
@@ -96,9 +96,9 @@
 //##############################################################################
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
 #define MAX_VALUE_CURRENT_SPORT 300 //Ampere
-#define MAX_VALUE_CURRENT_LOW 80 //Ampere
+#define MAX_VALUE_CURRENT_LOW 100 //Ampere
 #define MAX_VALUE_CURRENT_NOTBETRIEB 300 //Ampere
-#define MAX_VALUE_CURRENT_RUECKWAERTS 40//Ampere
+#define MAX_VALUE_CURRENT_RUECKWAERTS 50//Ampere
 #define Regen_on 80  //Ampere
 #define Regen_on_Sport 125  //Ampere
 #define Regen_off  50//Mindestens 10A, da sonst der Motor nicht stoppt
