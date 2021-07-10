@@ -5,6 +5,10 @@
 //2 OFF
 //3 OFF   Peak-Current off, sonst Drehen die Reifen unkontrollierbar durch
 //4 ON    UART Simple Mode
+
+//DIP2
+//1 ON
+//2 OFF
 //Potentiometer 1 -> Im Uhrzeigersinn bis zum Anschlag
 //Potentiometer 2 -> Gegen Uhrzeigersinn bis zum Anschlag
 //Potentiometer 3 -> Gegen Uhrzeigersinn bis zum Anschlag
@@ -64,22 +68,23 @@
 #define GRENZE_GASPEDAL_EMPFINDLICH 50  //0-100%
 #define GRENZE_GASPEDAL_EMPFINDLICH_SPORT 50 //0-100%
 
-#define MAX_ACC_DELAY 15//0-100%
+#define MAX_ACC_DELAY 10//0-100%
 #define MIN_ACC_DELAY 0  //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
 #define MAX_ACC_DELAY_SPORT 5 //0-100%
 #define MIN_ACC_DELAY_SPORT 0 //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_DECC_DELAY 0 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MAX_DECC_DELAY 2 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_DECC_DELAY_SPORT 0//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MAX_DECC_DELAY_SPORT 2//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY_SPORT 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
 #define SPEED 128 //Speed
 #define STOP 0 //STOPP
 #define FWD 1 //Vorwärts
-#define CURR 130
+#define REG 3 //Regen aktiv
+#define CURR 130 //Stromgrenze
 #define REGEN 131 //Regen Limit
 #define ACC 132 //Acceleration limit
 #define DECC 133 //Decceleration limit
@@ -95,17 +100,17 @@
 
 //##############################################################################
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
-#define MAX_VALUE_CURRENT_SPORT 300 //Ampere
-#define MAX_VALUE_CURRENT_LOW 100 //Ampere
-#define MAX_VALUE_CURRENT_NOTBETRIEB 300 //Ampere
-#define MAX_VALUE_CURRENT_RUECKWAERTS 50//Ampere
-#define Regen_on 80  //Ampere
-#define Regen_on_Sport 125  //Ampere
-#define Regen_off  50//Mindestens 10A, da sonst der Motor nicht stoppt
+#define MAX_VALUE_CURRENT_SPORT 200 //Ampere
+#define MAX_VALUE_CURRENT_LOW 150 //Ampere
+#define MAX_VALUE_CURRENT_NOTBETRIEB 100 //Ampere
+#define MAX_VALUE_CURRENT_RUECKWAERTS 80//Ampere
+#define Regen_on 20  //Ampere
+#define Regen_on_Sport 30  //Ampere
+#define Regen_off  10//Mindestens 10A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
-#define GASPEDAL_MAX 800  //Maximalwert der vom Gaspedal erreicht werden kann
-#define GASPEDAL_MIN 230 //Offset Spannung Gaspedal in 1/1023
+#define GASPEDAL_MAX 830  //Maximalwert der vom Gaspedal erreicht werden kann
+#define GASPEDAL_MIN 200 //Offset Spannung Gaspedal in 1/1023
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = {0x28, 0xE2, 0x7B, 0x79, 0xA2, 0x00, 0x03, 0x24};
@@ -119,6 +124,7 @@ uint8_t Temperatursensor_Leistungselektronik [8] = { 0x28, 0xCE, 0x06, 0x45, 0x9
 //###Auflistung und Zuweisung der Zustände
 volatile bool Bremse = true;
 volatile bool Gaspedal_angeschlossen = false;
+bool Bremse_alt = false;
 bool Sport_Modus = false;
 bool Sportmodus_state_alt = true;
 bool Notbetrieb = false;

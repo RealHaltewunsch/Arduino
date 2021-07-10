@@ -3,7 +3,7 @@ void  Gaspedal () {
   Sollwert_analog = constrain (Sollwert_analog , 0, GASPEDAL_MAX);
   Geschwindigkeit_schreiben(Sollwert_analog, Gang_wechseln, Bremse);
 
-   if (Sport_Modus) {
+  if (Sport_Modus) {
     Beschleunigung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Acc_Delay_Sport, Max_Acc_Delay_Sport);
     Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Decc_Delay_Sport, Max_Decc_Delay_Sport,  Bremse);
   }
@@ -12,6 +12,15 @@ void  Gaspedal () {
     Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Decc_Delay, Max_Decc_Delay,  Bremse);
   }
 
+  if (Bremse != Bremse_alt) {
+    if (Bremse) {
+      SEND(DIR, REG);
+    }
+    else {
+      SEND(DIR, FWD);
+    }
+  }
+  Bremse_alt = Bremse;
 }
 
 void Gaspedal_check () {
