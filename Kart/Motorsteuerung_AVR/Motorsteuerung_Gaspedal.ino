@@ -12,7 +12,7 @@ void  Gaspedal () {
     Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Decc_Delay, Max_Decc_Delay,  Bremse);
   }
 
-  if (Bremse != Bremse_alt) {
+  if (Bremse != Bremse_alt) {   //Bremse eingebaut
     if (Bremse) {
       SEND(DIR, REG);
     }
