@@ -1,14 +1,14 @@
 void Sport_Modus_auslesen() {
   int Strom_alt = Strom;
-  bool Sportmodus_state = digitalRead(Sportmodus_PIN);
+  bool Sportmodus_state = !digitalRead(Sportmodus_PIN);
 
   if (Notbetrieb_alt != Notbetrieb || Rueckwaertsgang_alt != Rueckwaertsgang || Sportmodus_state_alt != Sportmodus_state) {
     if (!Rueckwaertsgang) {
-      if (Notbetrieb && !Sportmodus_state) { //Wenn PIN HIGH dann kein Sport Modus
+      if (!Notbetrieb && Sportmodus_state) { //Wenn PIN HIGH dann kein Sport Modus
         Sport_Modus = true;
         Strom = map(MAX_VALUE_CURRENT_SPORT, 0, 434, 0, 127);
       }
-      else if (Notbetrieb && Sportmodus_state) {
+      else if (!Notbetrieb && !Sportmodus_state) {
         Sport_Modus = false;
         Strom = map(MAX_VALUE_CURRENT_LOW, 0, 434, 0, 127);   //Sportmodus deaktiviert, Notbetrieb aus
       }
@@ -21,10 +21,12 @@ void Sport_Modus_auslesen() {
       Sport_Modus = false;
     }
     digitalWrite(Sport_Modus_PIN_Leuchte, Sport_Modus);
-    if (Strom_alt != Strom && !Rueckwaertsgang) {
-      SEND(CURR, Strom);
-    }
+
   }
+  if (Strom_alt != Strom && !Rueckwaertsgang) {
+    SEND(CURR, Strom);
+  }
+  
 
   Notbetrieb_alt = Notbetrieb;
   Rueckwaertsgang_alt = Rueckwaertsgang;
