@@ -1,19 +1,21 @@
 void Regenerativbremsen_auslesen () {
   int Strom_regen_alt = Strom_regen;
+  bool Regenerativbremsen_alt = Regenerativbremsen;
   Regenerativbremsen = !digitalRead(Regenerativbremsen_PIN);
-  digitalWrite(Regenerativbremsen_PIN_Leuchte, Regenerativbremsen);
-  if (Regenerativbremsen && Sport_Modus) {
-    Strom_regen = map(Regen_on_Sport, 0, 434, 0, 127);
-  }
-  else if (Regenerativbremsen && !Sport_Modus) {
-    Strom_regen = map(Regen_on, 0, 434, 0, 127);
+  if (Regenerativbremsen_alt != Regenerativbremsen || Strom_regen == 0) {
+    digitalWrite(Regenerativbremsen_PIN_Leuchte, Regenerativbremsen);
+    if (Regenerativbremsen && Sport_Modus) {
+      Strom_regen = Regen_on_Sport;
+    }
+    else if (Regenerativbremsen && !Sport_Modus) {
+      Strom_regen = Regen_on;
+    }
+    else {
+      Strom_regen = Regen_off;
+    }
 
-  }
-  else {
-    Strom_regen = map(Regen_off, 0, 434, 0, 127);
-  }
-
-  if (Strom_regen_alt != Strom_regen) {
-    SEND(REGEN, Strom_regen);
+    if (Strom_regen_alt != Strom_regen) {
+      SEND(REGEN, Strom_regen);
+    }
   }
 }
