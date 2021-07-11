@@ -68,16 +68,16 @@
 #define GRENZE_GASPEDAL_EMPFINDLICH 50  //0-100%
 #define GRENZE_GASPEDAL_EMPFINDLICH_SPORT 50 //0-100%
 
-#define MAX_ACC_DELAY 10//0-100%
+#define MAX_ACC_DELAY 15//0-100%
 #define MIN_ACC_DELAY 0  //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_ACC_DELAY_SPORT 5 //0-100%
+#define MAX_ACC_DELAY_SPORT 10 //0-100%
 #define MIN_ACC_DELAY_SPORT 0 //0-100%-< so viel Delay nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_DECC_DELAY 2 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MAX_DECC_DELAY 0 //0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
-#define MAX_DECC_DELAY_SPORT 2//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
+#define MAX_DECC_DELAY_SPORT 0//0-100%-< so viel Delay beim wenn das Gaspedal minimal eingedrückt ist
 #define MIN_DECC_DELAY_SPORT 0 //0-100%-< so viel Delay beim Bremsen bleibt nach überschreiten des Wertes "GRENZE_GASPEDAL_EMPFINDLICH"
 
 #define SPEED 128 //Speed
@@ -100,17 +100,17 @@
 
 //##############################################################################
 //###Maximalwer Strom, interessant für die Betriebsmodi, wird per TX/RX übertragen
-#define MAX_VALUE_CURRENT_SPORT 200 //Ampere
+#define MAX_VALUE_CURRENT_SPORT 250 //Ampere
 #define MAX_VALUE_CURRENT_LOW 150 //Ampere
-#define MAX_VALUE_CURRENT_NOTBETRIEB 100 //Ampere
-#define MAX_VALUE_CURRENT_RUECKWAERTS 80//Ampere
-#define Regen_on 20  //Ampere
-#define Regen_on_Sport 30  //Ampere
-#define Regen_off  10//Mindestens 10A, da sonst der Motor nicht stoppt
+#define MAX_VALUE_CURRENT_NOTBETRIEB 50 //Ampere
+#define MAX_VALUE_CURRENT_RUECKWAERTS 75//Ampere
+#define REGEN_ON 20  //Ampere
+#define REGEN_ON_SPORT 30//Ampere
+#define REGEN_OFF  1//Mindestens 1A, da sonst der Motor nicht stoppt
 //##############################################################################
 //GASPEDAL gemessene Spannungen
 #define GASPEDAL_MAX 830  //Maximalwert der vom Gaspedal erreicht werden kann
-#define GASPEDAL_MIN 200 //Offset Spannung Gaspedal in 1/1023
+#define GASPEDAL_MIN 210 //Offset Spannung Gaspedal in 1/1023
 //##############################################################################
 //###Auflistung und Zuweisung aller verwendeten Sensoren
 uint8_t Temperatursensor_Akku_1[8] = {0x28, 0xE2, 0x7B, 0x79, 0xA2, 0x00, 0x03, 0x24};
@@ -165,31 +165,35 @@ unsigned short int Temperaturzaehler = 0;
 unsigned short int Sollwert_analog = 0;
 unsigned short int Sollwert = 0;
 
-int Grenze_Gaspedal_empfindlich = 0;        //Bis zu diesem Pedalwert wird das Gas sachte angenommen, wird in Initialwerte_schreiben berechnet
-int Grenze_Gaspedal_empfindlich_Sport = 0;  //Bis zu diesem Pedalwert wird das Gas sachte angenommen, wird in Initialwerte_schreiben berechnet
+unsigned short int Grenze_Gaspedal_empfindlich = 0;        //Bis zu diesem Pedalwert wird das Gas sachte angenommen, wird in Initialwerte_schreiben berechnet
+unsigned short int Grenze_Gaspedal_empfindlich_Sport = 0;  //Bis zu diesem Pedalwert wird das Gas sachte angenommen, wird in Initialwerte_schreiben berechnet
 
-int Max_Acc_Delay = 0;
-int Min_Acc_Delay = 0;
-int Max_Decc_Delay = 0;
-int Min_Decc_Delay = 0;
+unsigned short int Max_Ac_Delay = 0;
+unsigned short int Min_Ac_Delay = 0;
+unsigned short int Max_Dec_Delay = 0;
+unsigned short int Min_Dec_Delay = 0;
 
-int Max_Acc_Delay_Sport = 0;
-int Min_Acc_Delay_Sport = 0;
-int Max_Decc_Delay_Sport = 0;
-int Min_Decc_Delay_Sport = 0;
+int Max_Ac_Delay_Sport = 0;
+int Min_Ac_Delay_Sport = 0;
+int Max_Dec_Delay_Sport = 0;
+int Min_Dec_Delay_Sport = 0;
 
-int Beschleunigungslimit = 0;
-int Beschleunigungslimit_alt = 0;
-int Verzoegerungslimit = 0;
-int Sollwert_acc = 0;
-int Verzoegerungslimit_alt = 0;
+unsigned short int Beschleunigungslimit = 0;
+unsigned short int Beschleunigungslimit_alt = 0;
+unsigned short int Verzoegerungslimit = 0;
+unsigned short int Sollwert_acc = 0;
+unsigned short int Verzoegerungslimit_alt = 0;
 
-int Strom = 0;
-int Strom_regen = 0;
-int Strom_Rueckwaerts = 0;
+unsigned short int Strom = 0;
+unsigned short int Strom_regen = 0;
+unsigned short int Strom_Rueckwaerts = 0;
 
-int Batteriespannung = 0;
-int SOC = 0;
+unsigned short int Regen_off = 0;
+unsigned short int Regen_on = 0;
+unsigned short int Regen_on_Sport = 0;
+
+unsigned short int Batteriespannung = 0;
+unsigned short int SOC = 0;
 
 int Leistung = 0;
 unsigned short int Rueckwaerts_Zaehler = 0;
