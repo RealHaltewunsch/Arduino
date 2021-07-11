@@ -4,12 +4,12 @@ void  Gaspedal () {
   Geschwindigkeit_schreiben(Sollwert_analog, Gang_wechseln, Bremse);
 
   if (Sport_Modus) {
-    Beschleunigung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Acc_Delay_Sport, Max_Acc_Delay_Sport);
-    Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Decc_Delay_Sport, Max_Decc_Delay_Sport,  Bremse);
+    Beschleunigung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Ac_Delay_Sport, Max_Ac_Delay_Sport);
+    //Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich_Sport, Min_Dec_Delay_Sport, Max_Dec_Delay_Sport,  Bremse);
   }
   else {
-    Beschleunigung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Acc_Delay, Max_Acc_Delay);
-    Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Decc_Delay, Max_Decc_Delay,  Bremse);
+    Beschleunigung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Ac_Delay, Max_Ac_Delay);
+    //Verzoegerung_schreiben(Sollwert, 0, Grenze_Gaspedal_empfindlich, Min_Dec_Delay, Max_Dec_Delay,  Bremse);
   }
 
   if (Bremse != Bremse_alt) {   //Bremse eingebaut
@@ -51,6 +51,7 @@ void Beschleunigung_schreiben (unsigned short int Pedal, unsigned short int Gren
   if (Beschleunigungslimit_alt != Beschleunigungslimit) {
     SEND(ACC, Beschleunigungslimit);
   }
+  
 }
 
 void Verzoegerung_schreiben (unsigned short int Pedal, unsigned short int Grenze_unten, unsigned short int Grenze_oben, unsigned short int Min_delay, unsigned short int Max_delay , bool Bremse_read) {
